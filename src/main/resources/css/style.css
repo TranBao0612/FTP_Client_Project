@@ -1,0 +1,52 @@
+/* Style for the ControlButton */
+.control-button {
+    -fx-background-color: aliceblue;
+    -fx-text-fill: black;
+    -fx-border-color: dimgrey;
+    -fx-text-alignment: center;
+    -fx-border-width: 2px;
+}
+
+.control-button:hover {
+    -fx-border-color: lightseagreen;
+}
+
+.control-button:pressed {
+    -fx-background-color: cadetblue;
+}
+
+
+
+/* Style for the DirectoryDisplayer */
+.directory-displayer {
+    -fx-background-color: darkseagreen;
+    -fx-border-color: transparent;
+    -fx-text-fill: black;
+    -fx-text-alignment: left;
+}
+
+
+
+/* Style for the FolderSummary */
+.folder-summary {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-text-alignment: left;
+}
+
+
+
+/* Style for the LogConsole*/
+.log-console {
+    -fx-border-color: dimgrey;
+    -fx-border-width: 1px;
+    -fx-background-color: gainsboro;
+}
+.log-console .viewport {
+    -fx-background-color: gainsboro;
+}
+.log-console-text {
+    -fx-font-family: monospace;
+    -fx-text-alignment: left;
+    -fx-background-color: transparent;
+}
