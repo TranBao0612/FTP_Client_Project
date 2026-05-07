@@ -20,6 +20,14 @@ public class DirectoryDisplayer extends TextField implements UIObject {
     }
 
     /**
+     * Update the displayed directory path in the TextField.
+     * @param newDirectory
+     */
+    public void updateDirectory(String newDirectory) {
+        setText(newDirectory);
+    }
+
+    /**
      * Set the fixed width and height of the DirectoryDisplayer to ensure consistent layout in the UI.
      */
     @Override

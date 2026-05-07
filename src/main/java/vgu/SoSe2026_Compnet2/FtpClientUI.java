@@ -1,6 +1,8 @@
 package vgu.SoSe2026_Compnet2;
 
 import vgu.SoSe2026_Compnet2.constants.UIComponent;
+import vgu.SoSe2026_Compnet2.service.RequestConnectionInfo;
+import vgu.SoSe2026_Compnet2.data.ConnectionData;
 import vgu.SoSe2026_Compnet2.ui.*;
 
 import javafx.application.Application;
@@ -8,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 
 public class FtpClientUI extends Application {
     // Control button panel
@@ -25,6 +28,18 @@ public class FtpClientUI extends Application {
     @Override
     public void start(Stage stage) {
         BorderPane root = new BorderPane();
+
+
+        // Top connection info panel
+        ConnectionData connectionData = RequestConnectionInfo.request();
+        if (connectionData == null) {
+            // User cancelled the connection dialog, exit the application
+            stage.close();
+            return;
+        }
+        Label connectionInfoLabel = new Label("Connected to: " + connectionData.getServerURL() +
+                " | Username: " + connectionData.getUsername() + " | Password: " + connectionData.getPassword());
+        root.setTop(connectionInfoLabel);
 
         // Central control button panel
         initializeControlButtonPanel();
@@ -52,8 +67,8 @@ public class FtpClientUI extends Application {
     private void initializeControlButtonPanel() {
         disconnect = new ControlButton("Disconnect", () -> {});
         refresh = new ControlButton("Refresh", () -> {});
-        createFolder = new ControlButton("Create Folder", () -> {});
-        delete = new ControlButton("Delete", () -> {});
+        createFolder = new ControlButton("< Create Folder", () -> {});
+        delete = new ControlButton("< Delete", () -> {});
         download = new ControlButton("Download >", () -> {});
         upload = new ControlButton("< Upload", () -> {});
     }

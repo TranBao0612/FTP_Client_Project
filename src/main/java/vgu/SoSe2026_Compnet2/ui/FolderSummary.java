@@ -21,6 +21,16 @@ public class FolderSummary extends Label implements UIObject {
     }
 
     /**
+     * Update the displayed summary information in the label.
+     * @param numberOfFolders number of folders in the current directory
+     * @param numberOfFiles number of files in the current directory
+     * @param totalSizeInBytes total size of all files in the current directory, in bytes
+     */
+    public void updateSummary(int numberOfFolders, int numberOfFiles, long totalSizeInBytes) {
+        setText(String.format("%d Folders %d Files %d K", numberOfFolders, numberOfFiles, totalSizeInBytes / 1024));
+    }
+
+    /**
      * Set fixed width for the folder summary to ensure consistent layout in the UI. <br> 
      * The height is determined by the default label behavior, so it is not set here.
      */
