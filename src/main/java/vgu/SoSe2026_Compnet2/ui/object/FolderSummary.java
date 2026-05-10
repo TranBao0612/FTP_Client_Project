@@ -1,13 +1,14 @@
-package vgu.SoSe2026_Compnet2.ui;
+package vgu.SoSe2026_Compnet2.ui.object;
 
-import vgu.SoSe2026_Compnet2.constants.UIComponent;
+import vgu.SoSe2026_Compnet2.constants.UIMetrics;
+import vgu.SoSe2026_Compnet2.ui.UIComponent;
 import javafx.scene.control.Label;
 
 /**
  * A label that displays a summary of the contents of a folder, 
  *      including the number of folders, number of files, and total size in KB.
  */
-public class FolderSummary extends Label implements UIObject {
+public class FolderSummary extends Label implements UIComponent {
     /**
      * Create a label that displays a summary of the contents of a folder: 
      *          number of folders, number of files, and total size in KB.
@@ -20,6 +21,7 @@ public class FolderSummary extends Label implements UIObject {
         setStyle();
     }
 
+
     /**
      * Update the displayed summary information in the label.
      * @param numberOfFolders number of folders in the current directory
@@ -30,17 +32,22 @@ public class FolderSummary extends Label implements UIObject {
         setText(String.format("%d Folders %d Files %d K", numberOfFolders, numberOfFiles, totalSizeInBytes / 1024));
     }
 
+
     /**
      * Set fixed width for the folder summary to ensure consistent layout in the UI. <br> 
      * The height is determined by the default label behavior, so it is not set here.
      */
     @Override
     public void setFixedSize() {
-        setPrefWidth(UIComponent.FOLDER_PANEL_WIDTH);
-        setMinWidth(UIComponent.FOLDER_PANEL_WIDTH);
-        setMaxWidth(UIComponent.FOLDER_PANEL_WIDTH);
+        setPrefWidth(UIMetrics.FOLDER_PANEL_WIDTH);
+        setMinWidth(UIMetrics.FOLDER_PANEL_WIDTH);
+        setMaxWidth(UIMetrics.FOLDER_PANEL_WIDTH);
     }
 
+    
+    /**
+     * Apply CSS style class to style the text and the label background.
+     */
     @Override
     public void setStyle() {
         getStyleClass().add("folder-summary");

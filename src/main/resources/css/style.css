@@ -1,3 +1,5 @@
+/* -------------------- OBJECTS -------------------- */
+
 /* Style for the ControlButton */
 .control-button {
     -fx-background-color: aliceblue;
@@ -36,7 +38,18 @@
 
 
 
-/* Style for the LogConsole*/
+/* Style for the LogText*/
+.log-text {
+    -fx-font-family: monospace;
+    -fx-text-alignment: left;
+    -fx-background-color: transparent;
+}
+
+
+
+
+
+/* -------------------- PANELS -------------------- */
 .log-console {
     -fx-border-color: dimgrey;
     -fx-border-width: 1px;
@@ -44,9 +57,4 @@
 }
 .log-console .viewport {
     -fx-background-color: gainsboro;
-}
-.log-console-text {
-    -fx-font-family: monospace;
-    -fx-text-alignment: left;
-    -fx-background-color: transparent;
 }

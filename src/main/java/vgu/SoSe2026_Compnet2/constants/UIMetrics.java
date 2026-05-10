@@ -2,7 +2,7 @@ package vgu.SoSe2026_Compnet2.constants;
 
 import javafx.scene.Scene;
 
-public final class UIComponent {
+public final class UIMetrics {
     /**
      * Prefered height for each text line in UI.
      */

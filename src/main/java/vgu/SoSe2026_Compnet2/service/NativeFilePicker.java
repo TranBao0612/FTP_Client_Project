@@ -1,4 +1,4 @@
-package vgu.SoSe2026_Compnet2;
+package vgu.SoSe2026_Compnet2.service;
 
 import java.awt.FileDialog;
 import java.awt.Frame;

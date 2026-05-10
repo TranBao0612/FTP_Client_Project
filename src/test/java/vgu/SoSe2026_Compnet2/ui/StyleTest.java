@@ -1,6 +1,10 @@
 package vgu.SoSe2026_Compnet2.ui;
 
-import vgu.SoSe2026_Compnet2.constants.UIComponent;
+import vgu.SoSe2026_Compnet2.constants.UIMetrics;
+import vgu.SoSe2026_Compnet2.ui.object.ControlButton;
+import vgu.SoSe2026_Compnet2.ui.object.DirectoryDisplayer;
+import vgu.SoSe2026_Compnet2.ui.object.FolderSummary;
+import vgu.SoSe2026_Compnet2.ui.object.LogText;
 
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +33,7 @@ public class StyleTest extends Application {
         root.setBottom(testComponent);
 
         Scene scene = new Scene(root, 900, 600);
-        UIComponent.applyStylesheet(scene);
+        UIMetrics.applyStylesheet(scene);
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -65,13 +69,15 @@ public class StyleTest extends Application {
     private Node selectTestComponent(int type) {
         switch(type) {
             case 0: 
-                return new ControlButton("Test Button", () -> System.out.println("Button clicked!"));
+                ControlButton button = new ControlButton("Test Button");
+                button.addAction(() -> System.out.println("Button clicked!"));
+                return button;
             case 1:
                 return new DirectoryDisplayer("D:\\Documents\\Semester 4\\Computer Network 2\\Project\\FTP_Client_Project\\src\\main\\java\\vgu\\SoSe2026_Compnet2\\App.java");
             case 2:
                 return new FolderSummary(2, 1, 4831307);
             case 3:
-                return new LogConsole();
+                return new LogText();
             default: 
                 return new Pane();
         }

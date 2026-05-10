@@ -25,7 +25,7 @@ public final class LoginData {
     /**
      * Username for the DLPTEST FTP server (public test server, supports testing file uploads).
      */
-    public static final String DLPTEST_USERNAME = "dlptuser";
+    public static final String DLPTEST_USERNAME = "dlpuser";
     /**
      * Password for the DLPTEST FTP server (public test server, supports testing file uploads).
      */
