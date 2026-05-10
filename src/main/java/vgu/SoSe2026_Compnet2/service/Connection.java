@@ -43,13 +43,28 @@ public class Connection implements AutoCloseable {
     }
 
     /**
-     * Initializes a data connection to the specified FTP host.
-     * @param host the hostname or IP address of the FTP server
+     * Initializes a data connection to the specified FTP host with host and port information from the passive mode response.
+     * @param enterPassiveModeResponse the response from the FTP server indicating the data connection details (format: "227 Entering Passive Mode (192,168,1,2,7,138)")
      * @return Connection instance representing the data connection
      * @throws IOException if an I/O error occurs when creating the socket or getting the input/output streams
      */
-    public static Connection initializeFTPDataConnection(String host) throws IOException {
-        return new Connection(host, 20);
+    public static Connection initializeFTPDataConnection(String enterPassiveModeResponse) throws IOException {
+        String[] connectionInfo = extractConnectionInfoFromFTPPassiveModeResponse(enterPassiveModeResponse);
+        String host = String.join(".", connectionInfo[0], connectionInfo[1], connectionInfo[2], connectionInfo[3]);
+        int port = Integer.parseInt(connectionInfo[4]) * 256 + Integer.parseInt(connectionInfo[5]);
+        return new Connection(host, port);
+    }
+
+    /**
+     * Extracts the host and port information from the FTP server's passive mode response.
+     * @param response the passive mode response from the FTP server (format: "227 Entering Passive Mode (192,168,1,2,7,138)")
+     * @return an array containing 6 elements: the first 4 are the host octets, and the last 2 are the port numbers
+     */
+    public static String[] extractConnectionInfoFromFTPPassiveModeResponse(String response) {
+        // Example response: "227 Entering Passive Mode (192,168,1,2,7,138)"
+        int start = response.indexOf('(');
+        int end = response.indexOf(')');
+        return response.substring(start + 1, end).split(",");
     }
 
     /**

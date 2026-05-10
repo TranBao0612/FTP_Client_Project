@@ -38,12 +38,25 @@
 
 
 
-/* Style for the LogText*/
+/* Style for the LogText */
 .log-text {
     -fx-font-family: monospace;
     -fx-text-alignment: left;
     -fx-background-color: transparent;
 }
+
+
+/** Style for the FileTable */
+.file-table {
+    -fx-table-cell-border-color: transparent;
+}
+.left-aligned_col {
+    -fx-alignment: CENTER_LEFT;
+}
+.right-aligned_col {
+    -fx-alignment: CENTER_RIGHT;
+}
+
 
 
 

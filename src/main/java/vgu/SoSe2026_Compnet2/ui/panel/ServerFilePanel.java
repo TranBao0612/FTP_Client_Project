@@ -1,6 +1,6 @@
 package vgu.SoSe2026_Compnet2.ui.panel;
 
-public class ServerFilePanel implements FilePanel {
+public class ServerFilePanel extends FilePanel {
     @Override
     public void enableButton() {}
 
@@ -9,4 +9,12 @@ public class ServerFilePanel implements FilePanel {
 
     @Override
     public void clear() {}
+
+    @Override
+    public void setCDButtonAction() {}
+
+    @Override
+    public void setInteractFileItemAction() {}
+
+
 }

@@ -1,6 +1,12 @@
 package vgu.SoSe2026_Compnet2.ui.panel;
 
-public class UserFilePanel implements FilePanel {
+import vgu.SoSe2026_Compnet2.ui.object.*;
+
+public class UserFilePanel extends FilePanel {
+    public UserFilePanel() {
+        // Initialize UI components, e.g., FileTable, buttons, etc.
+    }
+
     @Override
     public void disableButton() {}
 
@@ -9,4 +15,10 @@ public class UserFilePanel implements FilePanel {
 
     @Override
     public void clear() {}
+
+    @Override
+    public void setCDButtonAction() {}
+
+    @Override
+    public void setInteractFileItemAction() {}
 }
