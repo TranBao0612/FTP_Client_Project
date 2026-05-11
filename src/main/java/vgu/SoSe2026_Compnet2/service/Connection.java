@@ -1,5 +1,6 @@
 package vgu.SoSe2026_Compnet2.service;
 
+import vgu.SoSe2026_Compnet2.constants.ConnectionConstant;
 import java.net.Socket;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
@@ -29,8 +30,8 @@ public class Connection implements AutoCloseable {
         this.socket = new Socket(host, port);
         this.out = new PrintWriter(socket.getOutputStream(), true);
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        turnOnTimeout();
     }
-
     /**
      * Initializes a control connection to the specified FTP host.
      * @param host the hostname or IP address of the FTP server
@@ -39,7 +40,7 @@ public class Connection implements AutoCloseable {
      * @throws IOException if an I/O error occurs when creating the socket or getting the input/output streams
      */
     public static Connection initializeFTPControlConnection(String host) throws UnknownHostException, IOException {
-        return new Connection(host, 21);
+        return new Connection(host, ConnectionConstant.FTP_CONTROL_PORT);
     }
 
     /**
@@ -89,6 +90,22 @@ public class Connection implements AutoCloseable {
      */
     public void out(String message) {
         out.println(message);
+    }
+
+    /**
+     * Turns off the socket timeout, allowing the connection to wait indefinitely for a response from the server.
+     * @throws IOException if an I/O error occurs when setting the socket timeout
+     */
+    public void turnOffTimeout() throws IOException {
+        socket.setSoTimeout(0); // 0 means infinite timeout
+    }
+
+    /**
+     * Turns on the socket timeout, setting it to a predefined value (e.g., 5000 milliseconds) to prevent indefinite blocking when waiting for a response from the server.
+     * @throws IOException if an I/O error occurs when setting the socket timeout
+     */
+    public void turnOnTimeout() throws IOException {
+        socket.setSoTimeout(ConnectionConstant.TIMEOUT_MILLISEC);
     }
 
     /**

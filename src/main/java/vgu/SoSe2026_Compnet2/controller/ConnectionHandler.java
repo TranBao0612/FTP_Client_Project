@@ -47,7 +47,7 @@ public class ConnectionHandler implements Runnable {
             try {
                 controller.connection = Connection.initializeFTPControlConnection(connectionData.getServerURL());
                 String welcomeMessage = controller.receiveFromServer();
-                if (welcomeMessage.startsWith("220")) {
+                if (ValidateFTPResponse.startWith(welcomeMessage, "220")) {
                     if (loginSuccessful(connectionData)) {
                         Platform.runLater(() -> {
                             updateUIOnConnectionSuccess(connectionData);
@@ -130,10 +130,10 @@ public class ConnectionHandler implements Runnable {
         controller.sendToServer("USER " + data.getUsername());
         response = controller.receiveFromServer();
         // Some server may not require pasword 
-        if (response.startsWith("230"))
+        if (ValidateFTPResponse.startWith(response, "230"))
             return true;
         // But if the server requires password and username is rejected, close connection and log error message.
-        if (response.startsWith("530") || !response.startsWith("331")) {
+        if (ValidateFTPResponse.startWith(response, "530") || !ValidateFTPResponse.startWith(response, "331")) {
             if (autoCloseOnFailure)
                 controller.closeConnection(true, "Login failed: Username rejected - " + data.getUsername());
             else
@@ -143,7 +143,7 @@ public class ConnectionHandler implements Runnable {
         // Send password
         controller.sendToServer("PASS " + data.getPassword());
         response = controller.receiveFromServer();
-        if (!response.startsWith("230")) {
+        if (!ValidateFTPResponse.startWith(response, "230")) {
             if (autoCloseOnFailure)
                 controller.closeConnection(true, "Login failed: Password rejected.");
             else

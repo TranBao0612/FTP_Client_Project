@@ -37,20 +37,6 @@ public class Controller implements AutoCloseable {
 
 
     // ----------------------------- Control Button Actions --------------------------------
-        // 1. CONNECTION BUTON
-    /**
-     * Connect to the server using the provided connection information. 
-     *      Enable UI interactions and log the connection status in the log console if the connection is successful. 
-     *      Otherwise, log the error message in the log console.
-     */
-    public void connect() {
-        // Pop up dialog to get connection information
-        // Retrieve connection information from the dialog
-        // Attempt to connect to the server using the provided information
-        // If connection is successful, enable control buttons and log the successful connection with server details in the log console.
-        // If connection fails, log the error message in the log console: 
-        //      unknown host, wrong credentials, anonymous login not allowed, etc.
-    }
 
         // 2. REFRESH BUTTON
     public void refresh() {
@@ -141,8 +127,8 @@ public class Controller implements AutoCloseable {
             do {
                 message = connection.in();
                 logConsole.log("[SERVER] " + message, LogConsole.TYPE_RESPONSE);
-            } while (!message.matches("^\\d{3} .*"));
-            return message;
+            } while (!message.matches("^\\d{3} "));
+            return message; 
         } catch (Exception e) {
             closeConnection(true, "Error receiving message: " + e.getMessage());
             return null;
@@ -182,6 +168,28 @@ public class Controller implements AutoCloseable {
         }
         // Set connection to null so that isConnected() will return false
         connection = null;
+    }
+
+    /**
+     * Turn off timeout for control connection to allow for long-running commands, e.g., file upload and download, without prematurely closing the connection due to timeout.
+     */
+    void turnOffTimeout() {
+        try {
+            connection.turnOffTimeout();
+        } catch (Exception e) {
+            closeConnection(true, "Error turning off timeout: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Turn on timeout for the connection to prevent hanging when the server does not respond.
+     */
+    void turnOnTimeout() {
+        try {
+            connection.turnOnTimeout();
+        } catch (Exception e) {
+            closeConnection(true, "Error turning on timeout: " + e.getMessage());
+        }
     }
 
     /**
