@@ -10,6 +10,7 @@ public final class LoginData {
      * Default username for anonymous FTP login
      */
     public static final String ANONYMOUS_USERNAME = "anonymous";
+    public static final String[] AlTERNATIVE_ANONYMOUS_USERNAME = {"demo", "ftp"}; // Some servers may use other anonymous username
     /**
      * Default password for anonymous FTP login (actually ignored by most servers, just defined for completeness)
      */

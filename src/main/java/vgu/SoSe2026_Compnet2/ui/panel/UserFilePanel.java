@@ -33,7 +33,7 @@ public class UserFilePanel extends FilePanel {
     @Override
     public void setCDButtonAction() {
         changeDirButton.addAction(() -> {
-            String newDir = DirectoryPicker.pick();
+            String newDir = DirectoryPicker.pick(changeDirButton);
             if (newDir == null) 
                 return;
             reload(newDir);

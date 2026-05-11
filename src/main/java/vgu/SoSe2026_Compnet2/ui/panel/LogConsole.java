@@ -8,6 +8,7 @@ import vgu.SoSe2026_Compnet2.service.DateFormatter;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.application.Platform;
 
 public class LogConsole extends ScrollPane implements UIComponent {
     public static final Color TYPE_COMMAND = Color.GREEN;
@@ -39,7 +40,7 @@ public class LogConsole extends ScrollPane implements UIComponent {
     public void log(String message, Color type) {
         Text text = new Text(DateFormatter.now() + " " + message + "\n");
         text.setFill(type);
-        logText.addLog(text);
+        Platform.runLater(() -> logText.addLog(text));
     }
 
 

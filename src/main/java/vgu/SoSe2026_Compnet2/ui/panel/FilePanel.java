@@ -15,10 +15,10 @@ import java.nio.file.Path;
  * The file panel consists of a directory displayer, a change directory button, a file table, and a folder summary.
  */
 public abstract class FilePanel extends BorderPane implements UIComponent {
-    protected ControlButton changeDirButton = new ControlButton("Change Directory");
-    protected DirectoryDisplayer directoryDisplayer = new DirectoryDisplayer("");
-    protected FileTable fileTable = new FileTable();
-    protected FolderSummary folderSummary = new FolderSummary();
+    public ControlButton changeDirButton = new ControlButton("Change Directory");
+    public DirectoryDisplayer directoryDisplayer = new DirectoryDisplayer("");
+    public FileTable fileTable = new FileTable();
+    public FolderSummary folderSummary = new FolderSummary();
 
     /**
      * Initialize a file panel with a directory displayer, a change directory button, a file table, and a folder summary. 

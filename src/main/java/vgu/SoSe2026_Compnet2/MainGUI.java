@@ -18,8 +18,8 @@ public class MainGUI extends Application {
 
     // Panels
     private ControlButtonPanel controlPanel = new ControlButtonPanel();
-    private FilePanel userFilePanel = new UserFilePanel();
-    private FilePanel serverFilePanel = new ServerFilePanel();
+    private UserFilePanel userFilePanel = new UserFilePanel();
+    private ServerFilePanel serverFilePanel = new ServerFilePanel();
     private LogConsole logConsole = new LogConsole();
 
     // Controller

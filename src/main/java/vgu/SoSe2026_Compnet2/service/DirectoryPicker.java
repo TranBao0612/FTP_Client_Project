@@ -7,10 +7,10 @@ public final class DirectoryPicker {
     private DirectoryPicker() {}
 
     
-    public static String pick() {
+    public static String pick(Node callingNode) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Select Directory");
-        java.io.File selectedDirectory = directoryChooser.showDialog(null);
+        java.io.File selectedDirectory = directoryChooser.showDialog(callingNode.getScene().getWindow());
         if (selectedDirectory != null) {
             return selectedDirectory.getAbsolutePath();
         } else {

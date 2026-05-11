@@ -3,24 +3,25 @@ package vgu.SoSe2026_Compnet2.controller;
 import vgu.SoSe2026_Compnet2.ui.panel.*;
 import vgu.SoSe2026_Compnet2.ui.object.ConnectionInfoLabel;
 import vgu.SoSe2026_Compnet2.service.Connection;
+import javafx.application.Platform;
 
 /**
  * Controller class to handle the logic of the application. 
  * Define functions of the control buttons
  */
-public class Controller {
-    private Connection connection;
-    private ConnectionInfoLabel connectionInfoLabel;
-    private ControlButtonPanel controlPanel;
-    private FilePanel userFilePanel;
-    private FilePanel serverFilePanel;
-    private LogConsole logConsole;
+public class Controller implements AutoCloseable {
+    Connection connection;
+    ConnectionInfoLabel connectionInfoLabel;
+    ControlButtonPanel controlPanel;
+    UserFilePanel userFilePanel;
+    ServerFilePanel serverFilePanel;
+    LogConsole logConsole;
 
     public Controller(Connection connection, 
                                     ConnectionInfoLabel connectionInfoLabel,
                                     ControlButtonPanel controlPanel, 
-                                    FilePanel userFilePanel, 
-                                    FilePanel serverFilePanel, 
+                                    UserFilePanel userFilePanel, 
+                                    ServerFilePanel serverFilePanel, 
                                     LogConsole logConsole
     ) {
         this.connection = connection;
@@ -30,7 +31,7 @@ public class Controller {
         this.serverFilePanel = serverFilePanel;
         this.logConsole = logConsole;
 
-        controlPanel.connection.addAction(new Connect());
+        controlPanel.connection.addAction(new ConnectionHandler(this));
     }
 
 
@@ -49,13 +50,6 @@ public class Controller {
         // If connection is successful, enable control buttons and log the successful connection with server details in the log console.
         // If connection fails, log the error message in the log console: 
         //      unknown host, wrong credentials, anonymous login not allowed, etc.
-    }
-
-    /**
-     * Disconnect from the server, disable UI interactions, and log the disconnection status in the log console.
-     */
-    public void disconnect() {
-        closeConnection(false, "Disconnected from server.");
     }
 
         // 2. REFRESH BUTTON
@@ -126,10 +120,10 @@ public class Controller {
      *      Close connection if the connection is closed and log the error message.
      * @param message The message to be sent to the server.
      */
-    private void sendToServer(String message) {
+    void sendToServer(String message) {
         if (connection.isConnected()) {
             connection.out(message);
-            logConsole.log(message, LogConsole.TYPE_COMMAND);
+            logConsole.log("[CLIENT] " + message, LogConsole.TYPE_COMMAND);
         } else {
             closeConnection(true, "Cannot send message.");
         }
@@ -140,10 +134,14 @@ public class Controller {
      *     Close connection if the connection is closed and log the error message.
      * @return The message received from the server, or null if an error occurs.
      */
-    private String receiveFromServer() {
+    String receiveFromServer() {
         try {
-            String message = connection.in();
-            logConsole.log(message, LogConsole.TYPE_RESPONSE);
+            String message;
+            // Handle case when server sends multiple response messages for a single command, e.g., welcome message "220-"
+            do {
+                message = connection.in();
+                logConsole.log("[SERVER] " + message, LogConsole.TYPE_RESPONSE);
+            } while (!message.matches("^\\d{3} .*"));
             return message;
         } catch (Exception e) {
             closeConnection(true, "Error receiving message: " + e.getMessage());
@@ -159,24 +157,44 @@ public class Controller {
      * @param isError Whether the event is an error.
      * @param message The error message to log.
      */
-    private void closeConnection(boolean isError, String message) {
-        // Close connection
-        connection.close();
+    void closeConnection(boolean isError, String message) {
+        // Skip this part if already disconnected (case when establishing connection failed)
+        if (connectButtonIsConnect()) {
+            // Close connection
+            connection.close();
+            // Update connection info label
+            connectionInfoLabel.disconnected();
+            // Disable control buttons
+            controlPanel.disableAllExceptConnect();
+            // Clear server file panels
+            serverFilePanel.disablePane();
+            serverFilePanel.clear();
+            // Log messages
+            logConsole.log(message, isError ? LogConsole.TYPE_ERROR : LogConsole.TYPE_INFO);
+            if (isError) 
+                logConsole.log("Error: Connection closed. Please reconnect.", LogConsole.TYPE_ERROR);
+            else
+                logConsole.log("Connection closed successfully.", LogConsole.TYPE_INFO);
+        } else {
+            // If in this case, connection has never been established sucessfully, 
+            // just log the error message without updating UI to avoid confusion.
+            logConsole.log(message, LogConsole.TYPE_ERROR);
+        }
+        // Set connection to null so that isConnected() will return false
         connection = null;
-        // Update connection info label
-        connectionInfoLabel.disconnected();
-        // Disable control buttons
-        controlPanel.disableAllExceptConnect();
-        // Clear file panels
-        userFilePanel.disablePane();
-        userFilePanel.clear();
-        serverFilePanel.disablePane();
-        serverFilePanel.clear();
-        // Log messages
-        logConsole.log(message, isError ? LogConsole.TYPE_ERROR : LogConsole.TYPE_INFO);
-        if (isError) 
-            logConsole.log("Error: Connection closed. Please reconnect.", LogConsole.TYPE_ERROR);
-        else
-            logConsole.log("Connection closed successfully.", LogConsole.TYPE_INFO);
+    }
+
+    /**
+     * Get the current connection status of the controller.
+     * @return true if the controller is currently connected to a server, false otherwise.
+     */
+    public boolean connectButtonIsConnect() {
+        return connection != null;
+    }
+
+    @Override
+    public void close() {
+        if (connection != null)
+            connection.close();
     }
 }

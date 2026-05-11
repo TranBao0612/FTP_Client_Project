@@ -31,6 +31,7 @@ public class ControlButtonPanel extends VBox {
      * Disable all buttons except the Connect button. Should be called when there is no connection.
      */
     public void disableAllExceptConnect() {
+        connection.setText("Connect");
         refresh.setDisable(true);
         createFolder.setDisable(true);
         delete.setDisable(true);
@@ -42,6 +43,7 @@ public class ControlButtonPanel extends VBox {
      * Enable all buttons. Should be called after a successful connection is established.
      */
     public void enableAll() {
+        connection.setText("Disconnect");
         refresh.setDisable(false);
         createFolder.setDisable(false);
         delete.setDisable(false);
