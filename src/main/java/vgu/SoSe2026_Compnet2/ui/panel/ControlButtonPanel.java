@@ -1,7 +1,8 @@
 package vgu.SoSe2026_Compnet2.ui.panel;
 
-import javafx.scene.layout.VBox;
 import vgu.SoSe2026_Compnet2.ui.object.ControlButton;
+import javafx.scene.layout.VBox;
+import javafx.geometry.Pos;
 
 public class ControlButtonPanel extends VBox {
     public ControlButton connection;
@@ -22,6 +23,7 @@ public class ControlButtonPanel extends VBox {
         upload = new ControlButton("Upload");
 
         getChildren().addAll(connection, refresh, createFolder, delete, download, upload);
+        setAlignment(Pos.CENTER);
         disableAllExceptConnect();
     }
 

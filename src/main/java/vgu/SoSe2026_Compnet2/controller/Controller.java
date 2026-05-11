@@ -1,6 +1,7 @@
 package vgu.SoSe2026_Compnet2.controller;
 
 import vgu.SoSe2026_Compnet2.ui.panel.*;
+import vgu.SoSe2026_Compnet2.ui.object.ConnectionInfoLabel;
 import vgu.SoSe2026_Compnet2.service.Connection;
 
 /**
@@ -9,14 +10,24 @@ import vgu.SoSe2026_Compnet2.service.Connection;
  */
 public class Controller {
     private Connection connection;
+    private ConnectionInfoLabel connectionInfoLabel;
     private ControlButtonPanel controlPanel;
-    private UserFilePanel userFilePanel;
-    private ServerFilePanel serverFilePanel;
+    private FilePanel userFilePanel;
+    private FilePanel serverFilePanel;
     private LogConsole logConsole;
 
-    public Controller(Connection connection, ControlButtonPanel controlPanel, LogConsole logConsole) {
+    public Controller(Connection connection, 
+                                    ConnectionInfoLabel connectionInfoLabel,
+                                    ControlButtonPanel controlPanel, 
+                                    FilePanel userFilePanel, 
+                                    FilePanel serverFilePanel, 
+                                    LogConsole logConsole
+    ) {
         this.connection = connection;
+        this.connectionInfoLabel = connectionInfoLabel;
         this.controlPanel = controlPanel;
+        this.userFilePanel = userFilePanel;
+        this.serverFilePanel = serverFilePanel;
         this.logConsole = logConsole;
 
         controlPanel.connection.addAction(new Connect());
@@ -152,12 +163,14 @@ public class Controller {
         // Close connection
         connection.close();
         connection = null;
+        // Update connection info label
+        connectionInfoLabel.disconnected();
         // Disable control buttons
         controlPanel.disableAllExceptConnect();
         // Clear file panels
-        userFilePanel.disableButton();
+        userFilePanel.disablePane();
         userFilePanel.clear();
-        serverFilePanel.disableButton();
+        serverFilePanel.disablePane();
         serverFilePanel.clear();
         // Log messages
         logConsole.log(message, isError ? LogConsole.TYPE_ERROR : LogConsole.TYPE_INFO);

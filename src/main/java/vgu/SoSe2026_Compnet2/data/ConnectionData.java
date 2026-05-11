@@ -8,17 +8,20 @@ public class ConnectionData {
     private String serverURL;
     private String username;
     private String password;
+    private boolean isAnonymous;
 
     /**
      * Initialize the connection data, data are immutable after creation.
      * @param serverURL the URL of the server to connect to
      * @param username the username for authentication
      * @param password the password for authentication
+     * @param isAnonymous whether the connection is anonymous
      */
-    public ConnectionData(String serverURL, String username, String password) {
+    public ConnectionData(String serverURL, String username, String password, boolean isAnonymous) {
         this.serverURL = serverURL;
         this.username = username;
         this.password = password;
+        this.isAnonymous = isAnonymous;
     }
 
     // Getters
@@ -32,5 +35,9 @@ public class ConnectionData {
 
     public String getPassword() {
         return password;
+    }
+
+    public boolean isAnonymous() {
+        return isAnonymous;
     }
 }

@@ -3,9 +3,7 @@ package vgu.SoSe2026_Compnet2.ui.panel;
 import vgu.SoSe2026_Compnet2.ui.UIComponent;
 import vgu.SoSe2026_Compnet2.ui.object.LogText;
 import vgu.SoSe2026_Compnet2.constants.UIMetrics;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import vgu.SoSe2026_Compnet2.service.DateFormatter;
 
 import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
@@ -16,7 +14,6 @@ public class LogConsole extends ScrollPane implements UIComponent {
     public static final Color TYPE_RESPONSE = Color.BLACK;
     public static final Color TYPE_ERROR = Color.RED;
     public static final Color TYPE_INFO = Color.BLUE;
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
      * LogText is a custom TextFlow that handles the display of log messages in the console.
@@ -40,8 +37,7 @@ public class LogConsole extends ScrollPane implements UIComponent {
      * @param type The color type of the message
      */
     public void log(String message, Color type) {
-        LocalDateTime now = LocalDateTime.now();
-        Text text = new Text(now.format(TIME_FORMATTER) + " " + message + "\n");
+        Text text = new Text(DateFormatter.now() + " " + message + "\n");
         text.setFill(type);
         logText.addLog(text);
     }

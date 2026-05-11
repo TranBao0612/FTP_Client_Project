@@ -1,5 +1,15 @@
 /* -------------------- OBJECTS -------------------- */
 
+/* Style for the ConnectionInfoLabel */
+.connection-info-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: sienna;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-text-alignment: center;
+}
+
 /* Style for the ControlButton */
 .control-button {
     -fx-background-color: aliceblue;
@@ -50,11 +60,14 @@
 .file-table {
     -fx-table-cell-border-color: transparent;
 }
-.left-aligned_col {
+.left-aligned-col {
     -fx-alignment: CENTER_LEFT;
 }
-.right-aligned_col {
+.right-aligned-col {
     -fx-alignment: CENTER_RIGHT;
+}
+.table-row-cell:selected {
+    -fx-background-color: powderblue;
 }
 
 
@@ -63,11 +76,22 @@
 
 
 /* -------------------- PANELS -------------------- */
-.log-console {
-    -fx-border-color: dimgrey;
-    -fx-border-width: 1px;
+/* Style for the whole window */
+.main-window {
     -fx-background-color: gainsboro;
 }
+
+/* Style for the LogConsole */
+.log-console {
+    -fx-border-color: dimgrey;
+    -fx-background-color: transparent;
+}
 .log-console .viewport {
-    -fx-background-color: gainsboro;
+    -fx-background-color: transparent;
+}
+
+/* Style for the FilePanel */
+.file-panel {
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
 }

@@ -46,13 +46,9 @@ public class ControlButton extends Button implements UIComponent {
      */
     @Override
     public void setFixedSize() {
-        setPrefWidth(UIMetrics.CONTROL_BUTTON_WIDTH);
-        setMaxWidth(UIMetrics.CONTROL_BUTTON_WIDTH);
-        setMinWidth(UIMetrics.CONTROL_BUTTON_WIDTH);
-
-        setPrefHeight(UIMetrics.CONTROL_BUTTON_HEIGHT);
-        setMaxHeight(UIMetrics.CONTROL_BUTTON_HEIGHT);
-        setMinHeight(UIMetrics.CONTROL_BUTTON_HEIGHT);
+        setPrefSize(UIMetrics.CONTROL_BUTTON_WIDTH, UIMetrics.CONTROL_BUTTON_HEIGHT);
+        setMinSize(UIMetrics.CONTROL_BUTTON_WIDTH, UIMetrics.CONTROL_BUTTON_HEIGHT);
+        setMaxSize(UIMetrics.CONTROL_BUTTON_WIDTH, UIMetrics.CONTROL_BUTTON_HEIGHT);
     }
 
     

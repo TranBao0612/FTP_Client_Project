@@ -1,13 +1,16 @@
 package vgu.SoSe2026_Compnet2.data;
 
+import vgu.SoSe2026_Compnet2.service.DateFormatter;
+import java.io.File;
+
 /**
  * Represents the metadata of a file/directory, includes: type, name, size (in bytes), and last modified date.
  */
 public class FileMetadata {
-    public FileType type;
-    public String name;
-    public long sizeInByte;
-    public String lastModified;
+    private FileType type;
+    private String name;
+    private long sizeInByte;
+    private String lastModified;
 
     /**
      * Constructor for FileMetadata.
@@ -63,11 +66,46 @@ public class FileMetadata {
     }
 
     /**
+     * Retrieves file metadata from a Java File object.
+     * @param javaFile The Java File object to be converted to FileMetadata.
+     * @return metadata of the file/directory represented by the Java File object. If the type is not a regular file or directory, it will be marked as UNKNOWN.
+     */
+    public static FileMetadata derivedFromJavaFileObject(File javaFile) {
+        return new FileMetadata(
+                javaFile.isDirectory() ? FileType.DIRECTORY : javaFile.isFile() ? FileType.FILE : FileType.UNKNOWN,
+                javaFile.getName(),
+                javaFile.length(),
+                DateFormatter.format(javaFile.lastModified())
+        );
+    }
+    /**
+     * Retrieves file metadata from a file path.
+     * @param path The file path to be converted to FileMetadata.
+     * @return metadata of the file/directory represented by the file path. If the type is not a regular file or directory, it will be marked as UNKNOWN.
+     */
+    public static FileMetadata derivedFromJavaFileObject(String path) {
+        return derivedFromJavaFileObject(new File(path));
+    }
+
+    /**
      * Returns a string representation of the file metadata, including type, size, last modified time, and name.
      * @return A string representation of the file metadata.
      */
     public String toString() {
         return String.format("Type: %s, Size: %d, Modified: %s, Name: %s", type, sizeInByte, lastModified, name);
+    }
+
+    public FileType getType() {
+        return type;
+    }
+    public String getName() {
+        return name;
+    }
+    public long getSizeInByte() {
+        return sizeInByte;
+    }
+    public String getLastModified() {
+        return lastModified;
     }
 
     /**

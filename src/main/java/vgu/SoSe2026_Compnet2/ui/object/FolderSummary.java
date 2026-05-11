@@ -21,6 +21,10 @@ public class FolderSummary extends Label implements UIComponent {
         setStyle();
     }
 
+    public FolderSummary() {
+        this(0, 0, 0);
+    }
+
 
     /**
      * Update the displayed summary information in the label.
@@ -30,6 +34,13 @@ public class FolderSummary extends Label implements UIComponent {
      */
     public void updateSummary(int numberOfFolders, int numberOfFiles, long totalSizeInBytes) {
         setText(String.format("%d Folders %d Files %d K", numberOfFolders, numberOfFiles, totalSizeInBytes / 1024));
+    }
+
+    /**
+     * Clear the summary information by resetting the label text to show 0 folders, 0 files, and 0 KB.
+     */
+    public void clear() {
+        updateSummary(0, 0, 0);
     }
 
 

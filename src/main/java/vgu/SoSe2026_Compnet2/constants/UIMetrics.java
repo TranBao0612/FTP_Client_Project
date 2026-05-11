@@ -13,18 +13,19 @@ public final class UIMetrics {
     public static final int MAIN_WINDOW_WIDTH = 900;
 
     // ---------- Control Button ----------
-    public static final int CONTROL_BUTTON_WIDTH = 90;
+    public static final int CONTROL_BUTTON_WIDTH = 120;
     public static final int CONTROL_BUTTON_HEIGHT = HEIGHT_PER_LINE;
 
     // ---------- Directory Displayer ----------
     public static final int DIRECTORY_DISPLAYER_WIDTH = 250;
     public static final int DIRECTORY_DISPLAYER_HEIGHT = CONTROL_BUTTON_HEIGHT;
 
-    // ---------- Folder Table ----------
-    public static final int FOLDER_TABLE_WIDTH = CONTROL_BUTTON_WIDTH + DIRECTORY_DISPLAYER_WIDTH + 10; // 20 for padding
-
     // ---------- Folder Panel ----------
-    public static final int FOLDER_PANEL_WIDTH = FOLDER_TABLE_WIDTH;
+    /**
+     * The inner padding between the directory displayer and the change directory button in the folder panel.
+     */
+    public static final int FOLDER_PANEL_INNER_PADDING = 10;
+    public static final int FOLDER_PANEL_WIDTH = CONTROL_BUTTON_WIDTH + DIRECTORY_DISPLAYER_WIDTH + FOLDER_PANEL_INNER_PADDING;
 
     // ---------- Log Console ----------
     public static final int LOG_CONSOLE_HEIGHT = HEIGHT_PER_LINE * 5;

@@ -3,8 +3,10 @@ package vgu.SoSe2026_Compnet2.ui.object;
 import vgu.SoSe2026_Compnet2.ui.UIComponent;
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TableColumn;
-import javafx.beans.property.*;
+import javafx.scene.control.SelectionMode;
 import java.util.List;
 
 public class FileTable extends TableView<FileMetadata> implements UIComponent {
@@ -15,12 +17,16 @@ public class FileTable extends TableView<FileMetadata> implements UIComponent {
 
     public FileTable() {
         // Add columns and set cell value factories
-        nameCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().name));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         typeCol.setCellValueFactory(data -> 
-                new SimpleStringProperty(data.getValue().type == FileMetadata.FileType.DIRECTORY ? "Folder" : "File"));
-        sizeCol.setCellValueFactory(data -> new SimpleLongProperty(data.getValue().sizeInByte).asObject());
-        lastModifiedCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().lastModified));
+                new SimpleStringProperty(data.getValue().getType() == FileMetadata.FileType.DIRECTORY ? "Folder" : "File"));
+        sizeCol.setCellValueFactory(new PropertyValueFactory<>("sizeInByte"));
+        lastModifiedCol.setCellValueFactory(new PropertyValueFactory<>("lastModified"));
         getColumns().addAll(nameCol, typeCol, sizeCol, lastModifiedCol);
+
+        // Prohibited multi-row selection to avoid ambiguity in file interactions
+        getSelectionModel().setCellSelectionEnabled(false);
+        getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
 
     /**
@@ -41,7 +47,7 @@ public class FileTable extends TableView<FileMetadata> implements UIComponent {
 
 
     /**
-     * Does not set fixed size, instead set the column to be resizable.
+     * Does not set fixed size, instead set the column to be resizable & allow the table to grow with the parent container.
      */
     @Override
     public void setFixedSize() {
@@ -55,10 +61,10 @@ public class FileTable extends TableView<FileMetadata> implements UIComponent {
     @Override
     public void setStyle() {
         getStyleClass().add("file-table");
-        nameCol.getStyleClass().add("left-aligned_col");
-        typeCol.getStyleClass().add("right-aligned_col");
-        sizeCol.getStyleClass().add("right-aligned_col");
-        lastModifiedCol.getStyleClass().add("left-aligned_col");
+        nameCol.getStyleClass().add("left-aligned-col");
+        typeCol.getStyleClass().add("right-aligned-col");
+        sizeCol.getStyleClass().add("right-aligned-col");
+        lastModifiedCol.getStyleClass().add("left-aligned-col");
     }
     
 

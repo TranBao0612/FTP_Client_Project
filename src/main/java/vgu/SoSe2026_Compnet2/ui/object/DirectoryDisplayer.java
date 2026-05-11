@@ -25,13 +25,9 @@ public class DirectoryDisplayer extends TextField implements UIComponent {
      */
     @Override
     public void setFixedSize() {
-        setPrefWidth(UIMetrics.DIRECTORY_DISPLAYER_WIDTH);
-        setMaxWidth(UIMetrics.DIRECTORY_DISPLAYER_WIDTH);
-        setMinWidth(UIMetrics.DIRECTORY_DISPLAYER_WIDTH);
-
-        setPrefHeight(UIMetrics.DIRECTORY_DISPLAYER_HEIGHT);
-        setMaxHeight(UIMetrics.DIRECTORY_DISPLAYER_HEIGHT);
-        setMinHeight(UIMetrics.DIRECTORY_DISPLAYER_HEIGHT);
+        setPrefSize(UIMetrics.DIRECTORY_DISPLAYER_WIDTH, UIMetrics.DIRECTORY_DISPLAYER_HEIGHT);
+        setMaxSize(UIMetrics.DIRECTORY_DISPLAYER_WIDTH, UIMetrics.DIRECTORY_DISPLAYER_HEIGHT);
+        setMinSize(UIMetrics.DIRECTORY_DISPLAYER_WIDTH, UIMetrics.DIRECTORY_DISPLAYER_HEIGHT);
     }
 
     /**

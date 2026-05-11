@@ -59,7 +59,8 @@ public class RequestConnectionInfo extends Dialog<ConnectionData> {
                         usernameField.getPromptText() : usernameField.getText().trim();
         String password = passwordField.getText().trim().isBlank() ? 
                         passwordField.getPromptText() : passwordField.getText().trim();
-        return new ConnectionData(serverURL, username, password);
+        boolean isAnonymous = isAnonymousLogin.isSelected();
+        return new ConnectionData(serverURL, username, password, isAnonymous);
     }
 
     /**
