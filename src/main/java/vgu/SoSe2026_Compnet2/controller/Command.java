@@ -4,7 +4,6 @@ import vgu.SoSe2026_Compnet2.service.ValidateFTPResponse;
 import vgu.SoSe2026_Compnet2.service.Connection;
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import java.util.List;
-import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.ArrayList;
 
@@ -77,5 +76,28 @@ public final class Command {
             }
         }
         return null;
+    }
+
+    /**
+     * Send CDUP command to the server to change the current directory to its parent directory.
+     * @param controller instances stores all UI components
+     * @return true if the directory change is successful, false otherwise
+     */
+    public static boolean cdup(Controller controller) {
+        controller.sendToServer("CDUP");
+        String response = controller.receiveFromServer();
+        if(ValidateFTPResponse.startWith(response, "200") || ValidateFTPResponse.startWith(response, "250"))
+            return true;
+        else
+            return false;
+    }
+
+    public static boolean cwd(Controller controller, String subFolderName) {
+        controller.sendToServer("CWD " + subFolderName);
+        String response = controller.receiveFromServer();
+        if(ValidateFTPResponse.startWith(response, "250"))
+            return true;
+        else
+            return false;
     }
 }

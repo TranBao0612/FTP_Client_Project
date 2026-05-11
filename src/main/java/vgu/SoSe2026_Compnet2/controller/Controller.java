@@ -31,9 +31,12 @@ public class Controller implements AutoCloseable {
         this.userFilePanel = userFilePanel;
         this.serverFilePanel = serverFilePanel;
         this.logConsole = logConsole;
-
+        // Add action listeners to control buttons
         controlPanel.connection.addAction(new ConnectionHandler(this));
         controlPanel.refresh.addAction(new RefreshHandler(this));
+        // Add action listeners for server file panel
+        serverFilePanel.addCDButtonAction(ChangeDirectoryHandler.toParent(this));
+        ChangeDirectoryHandler.setCdToChild(this);
     }
 
 

@@ -29,29 +29,6 @@ public class ServerFilePanel extends FilePanel {
     }
 
     /**
-     * Enable to add action to clear selection and double-clicking a folder in the file table to change into that folder.
-     * @param doubleClickFolder the action to change into the double-clicked folder
-     */
-    public void addDoubleClickFolderAction(Runnable doubleClickFolder) {
-        fileTable.setRowFactory(tv -> {
-            TableRow<FileMetadata> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                // Clear selection when clicking on secondary mouse button
-                if (event.getButton() == MouseButton.SECONDARY) {
-                    fileTable.getSelectionModel().clearSelection();
-                }
-                // Double-click and primary mouse button to open folder
-                if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-                    if (row.getItem() != null && row.getItem().getType() == FileMetadata.FileType.DIRECTORY) {
-                        doubleClickFolder.run();
-                    }
-                }
-            });
-            return row;
-        });
-    }
-
-    /**
      * Override the abstract methods from FilePanel with empty implementations, 
      *      as the actual actions will be added through the addCDButtonAction and addDoubleClickFolderAction methods
      *      by the Controller.

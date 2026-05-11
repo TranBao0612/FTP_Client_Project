@@ -6,9 +6,20 @@ import vgu.SoSe2026_Compnet2.service.Connection;
 import javafx.application.Platform;
 import java.util.List;
 
+/**
+ * Handle the logic when the refresh button is clicked.
+ */
 public class RefreshHandler implements Runnable {
     Controller controller;
 
+    /**
+     * Handle the logic when the refresh button is clicked.
+     * The refresh process includes: 
+     *      retrieve the current working directory and file list from the server, 
+     *      update the server file panel with the new file list, 
+     *      and log the refresh status in the log console.
+     * @param controller
+     */
     public RefreshHandler(Controller controller) {
         this.controller = controller;
     }
@@ -49,8 +60,9 @@ public class RefreshHandler implements Runnable {
     }
 
     /**
-     * 
-     * @param errorMessage
+     * If refresh is successful, update the server file panel with the new file list and log the success message
+     * @param currentDirectory the current working directory of the server
+     * @param fileList the list of files' metadata in the current directory
      */
     private void updateUIOnSuccess(String currentDirectory, List<FileMetadata> fileList) {
         Platform.runLater(() -> {
