@@ -4,6 +4,7 @@ import vgu.SoSe2026_Compnet2.constants.UIMetrics;
 import vgu.SoSe2026_Compnet2.ui.UIComponent;
 import javafx.scene.control.Button;
 import javafx.concurrent.Task;
+import javafx.application.Platform;
 
 /**
  * A custom button class for control buttons in the FTP client UI. <br>
@@ -25,19 +26,13 @@ public class ControlButton extends Button implements UIComponent {
 
     /**
      * Adds an action to the button that will be executed when the button is clicked.
+     * Button will be disabled while the action is being executed to prevent multiple clicks.
      * @param action the Runnable action to execute on button click
      */
     public void addAction(Runnable action) {
-        setOnAction(e -> action.run());
-    }
-
-    /**
-    * Adds an action to the button that will be executed in a new thread when the button is clicked. 
-    * This is useful for long-running tasks to avoid blocking the UI thread with success and failure handling.
-    * @param task the Runnable task to execute on button click
-    */
-    public void addAction(Task task) {
-        setOnAction(e -> new Thread(task).start());
+        setOnAction(e -> {
+            action.run();
+        });
     }
 
 

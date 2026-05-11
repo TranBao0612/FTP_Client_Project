@@ -3,7 +3,8 @@ package vgu.SoSe2026_Compnet2.controller;
 import vgu.SoSe2026_Compnet2.ui.panel.*;
 import vgu.SoSe2026_Compnet2.ui.object.ConnectionInfoLabel;
 import vgu.SoSe2026_Compnet2.service.Connection;
-import javafx.application.Platform;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Controller class to handle the logic of the application. 
@@ -32,6 +33,7 @@ public class Controller implements AutoCloseable {
         this.logConsole = logConsole;
 
         controlPanel.connection.addAction(new ConnectionHandler(this));
+        controlPanel.refresh.addAction(new RefreshHandler(this));
     }
 
 
@@ -106,7 +108,7 @@ public class Controller implements AutoCloseable {
      *      Close connection if the connection is closed and log the error message.
      * @param message The message to be sent to the server.
      */
-    void sendToServer(String message) {
+    public void sendToServer(String message) {
         if (connection.isConnected()) {
             connection.out(message);
             logConsole.log("[CLIENT] " + message, LogConsole.TYPE_COMMAND);
@@ -120,18 +122,37 @@ public class Controller implements AutoCloseable {
      *     Close connection if the connection is closed and log the error message.
      * @return The message received from the server, or null if an error occurs.
      */
-    String receiveFromServer() {
+    public String receiveFromServer() {
         try {
             String message;
             // Handle case when server sends multiple response messages for a single command, e.g., welcome message "220-"
             do {
                 message = connection.in();
                 logConsole.log("[SERVER] " + message, LogConsole.TYPE_RESPONSE);
-            } while (!message.matches("^\\d{3} "));
+            } while (!message.matches("^\\d{3} .*"));
             return message; 
         } catch (Exception e) {
             closeConnection(true, "Error receiving message: " + e.getMessage());
             return null;
+        }
+    }
+
+    /**
+     * Receive messages from the data connection and log the responses in the log console.
+     * @param dataConnection The data connection to receive messages from.
+     * @return A list of messages received from the data connection, or null if an error occurs.
+     */
+    public void receiveFromDataConnection(Connection dataConnection, AtomicBoolean isDone, List<String> storage) {
+        try {
+            String message;
+            while (!isDone.get() && (message = dataConnection.in()) != null) {
+                synchronized (storage) {
+                    storage.add(message);
+                }
+                logConsole.log("[DATA CONNECTION] " + message, LogConsole.TYPE_RESPONSE);
+            } 
+        } catch (Exception ignored) {
+             // Ignore exceptions caused by closing the data connection before the transfer is complete, as it is expected behavior.
         }
     }
 
@@ -143,7 +164,7 @@ public class Controller implements AutoCloseable {
      * @param isError Whether the event is an error.
      * @param message The error message to log.
      */
-    void closeConnection(boolean isError, String message) {
+    public void closeConnection(boolean isError, String message) {
         // Skip this part if already disconnected (case when establishing connection failed)
         if (connectButtonIsConnect()) {
             // Close connection
@@ -173,7 +194,7 @@ public class Controller implements AutoCloseable {
     /**
      * Turn off timeout for control connection to allow for long-running commands, e.g., file upload and download, without prematurely closing the connection due to timeout.
      */
-    void turnOffTimeout() {
+    public void turnOffTimeout() {
         try {
             connection.turnOffTimeout();
         } catch (Exception e) {
@@ -184,7 +205,7 @@ public class Controller implements AutoCloseable {
     /**
      * Turn on timeout for the connection to prevent hanging when the server does not respond.
      */
-    void turnOnTimeout() {
+    public void turnOnTimeout() {
         try {
             connection.turnOnTimeout();
         } catch (Exception e) {
@@ -198,6 +219,15 @@ public class Controller implements AutoCloseable {
      */
     public boolean connectButtonIsConnect() {
         return connection != null;
+    }
+
+    /**
+     * Disable buttons that require a data connection, e.g., refresh, download, and upload buttons.
+     */
+    public void disableRequiredDataConnectionButtons() {
+        controlPanel.refresh.setDisable(true);
+        controlPanel.download.setDisable(true);
+        controlPanel.upload.setDisable(true);
     }
 
     @Override

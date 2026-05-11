@@ -24,6 +24,9 @@ public class UserFilePanel extends FilePanel {
         super();
         directoryDisplayer.setText(Directory.DEFAULT_USER_FILE_PANEL_DIR);
         reload(directoryDisplayer.getText());
+        // Add action
+        setCDButtonAction();
+        setDoubleClickFolderAction();
     }
 
     /**
@@ -70,6 +73,13 @@ public class UserFilePanel extends FilePanel {
      */
     public void reload(String folder) {
         reload(folder, getFileList(folder));
+    }
+
+    /**
+     * Refresh the file panel
+     */
+    public void reload() {
+        reload(directoryDisplayer.getText(), getFileList(directoryDisplayer.getText()));
     }
 
     /**

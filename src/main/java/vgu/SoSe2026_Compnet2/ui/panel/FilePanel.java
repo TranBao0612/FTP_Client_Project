@@ -33,9 +33,6 @@ public abstract class FilePanel extends BorderPane implements UIComponent {
         // Style and size
         setFixedSize();
         setStyle();
-        // Add actions
-        setCDButtonAction();
-        setDoubleClickFolderAction();
     }
 
     /**
@@ -70,23 +67,29 @@ public abstract class FilePanel extends BorderPane implements UIComponent {
      * Enable the file panel for user interactions, by enabling the change directory button.
      */
     public void enablePane() {
-        changeDirButton.setDisable(false);
+        Platform.runLater(() -> {
+            changeDirButton.setDisable(false);
+        });
     }
     /**
      * Disable the file panel for user interactions, by disabling the change directory button 
      *          and clear the pane.
      */
     public void disablePane() {
-        changeDirButton.setDisable(true);
+        Platform.runLater(() -> {
+            changeDirButton.setDisable(true);
+        });
         clear();
     }
     /**
      * Clear the file panel by clearing the directory displayer, file table, and folder summary.
      */
     public void clear() {
-        directoryDisplayer.setText("");
-        fileTable.clear();
-        folderSummary.clear();
+        Platform.runLater(() -> {
+            directoryDisplayer.setText("");
+            fileTable.clear();
+            folderSummary.clear();
+        });
     }
 
      /**

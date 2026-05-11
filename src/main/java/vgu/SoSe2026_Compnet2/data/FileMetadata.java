@@ -2,6 +2,8 @@ package vgu.SoSe2026_Compnet2.data;
 
 import vgu.SoSe2026_Compnet2.service.DateFormatter;
 import java.io.File;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Represents the metadata of a file/directory, includes: type, name, size (in bytes), and last modified date.
@@ -46,10 +48,10 @@ public class FileMetadata {
                 fileType = FileType.DIRECTORY;
                 break;
             case '-':
-                fileType = FileType.UNKNOWN;
+                fileType = FileType.FILE;
                 break;
             default:
-                fileType = FileType.FILE;
+                fileType = FileType.UNKNOWN;
         }
         // Size
         long sizeInByte = Long.parseLong(parts[4]);
@@ -63,6 +65,14 @@ public class FileMetadata {
         String name = nameBuilder.toString().trim();
         // Return the metadata object
         return new FileMetadata(fileType, name, sizeInByte, lastModified);
+    }
+
+    public static List<FileMetadata> derivedFromUnixDescription(List<String> unixFileDescriptions) {
+        List<FileMetadata> metadataList = new ArrayList<>();
+        for (String description : unixFileDescriptions) {
+            metadataList.add(derivedFromUnixDescription(description));
+        }
+        return metadataList;
     }
 
     /**

@@ -32,8 +32,8 @@ public class MainGUI extends Application {
         // Layout
         BorderPane root = new BorderPane();
         root.setTop(connectionInfoLabel);
-        root.setLeft(userFilePanel);
-        root.setRight(serverFilePanel);
+        root.setLeft(serverFilePanel);
+        root.setRight(userFilePanel);
         root.setCenter(controlPanel);
         root.setBottom(logConsole);
         root.getStyleClass().add("main-window");

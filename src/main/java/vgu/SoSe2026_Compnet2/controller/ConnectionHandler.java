@@ -25,6 +25,9 @@ public class ConnectionHandler implements Runnable {
 
     @Override
     public void run() {
+        // Disable the connect button to prevent multiple connection attempts while connecting or disconnecting.
+        controller.controlPanel.connection.setDisable(true);
+        // Must enable again after finish, impleneted in both connect() and disconnect() methods to ensure the button is enabled again
         if (!controller.connectButtonIsConnect()) {
             connect();
         } else {
@@ -50,18 +53,23 @@ public class ConnectionHandler implements Runnable {
                 if (ValidateFTPResponse.startWith(welcomeMessage, "220")) {
                     if (loginSuccessful(connectionData)) {
                         Platform.runLater(() -> {
-                            updateUIOnConnectionSuccess(connectionData);
+                            updateUIOnSuccess(connectionData);
                         });
+                        // Button will be enabled again in the RefreshHandler, so do not need to enable it here.
+                        new RefreshHandler(controller).run();
                     }
                 } else {
                     // Connection is closed by the server, log the error message and close the connection.
                     controller.closeConnection(true, "Connection closed by server.");
                 }
-                return;
             } catch (UnknownHostException e) {
                 controller.closeConnection(true, "Unknown host: " + e.getMessage());
             } catch (IOException e) {
                 controller.closeConnection(true, "Failed to connect to server: " + e.getMessage());
+            } finally {
+                Platform.runLater(() -> {
+                    controller.controlPanel.connection.setDisable(false);
+                });
             }
         }).start();
     }
@@ -69,18 +77,19 @@ public class ConnectionHandler implements Runnable {
 
     /**
      * Disconnect from the server, disable UI interactions, and log the disconnection status in the log console.
+     * This method run on JavaxFX application thread.
      */
     private void disconnect() {
         controller.closeConnection(false, "Disconnected from server.");
+        controller.controlPanel.connection.setDisable(false);
     }
 
     /**
      * Update the UI after a successful connection is established.
      * @param data The connection data used to establish the connection, including server URL, username, and whether it's an anonymous login.
      */
-    private void updateUIOnConnectionSuccess(ConnectionData data) {
+    private void updateUIOnSuccess(ConnectionData data) {
         controller.connectionInfoLabel.connected(data.getServerURL(), data.isAnonymous(), data.getUsername());
-        controller.controlPanel.enableAll();
         controller.serverFilePanel.enablePane();
         controller.logConsole.log("Successfully connected to " + data.getServerURL(), LogConsole.TYPE_INFO);
     }

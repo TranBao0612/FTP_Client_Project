@@ -4,3 +4,6 @@ target/
 
 # VS Code
 .vscode/
+
+# VSCodeCounter
+.VSCodeCounter/
