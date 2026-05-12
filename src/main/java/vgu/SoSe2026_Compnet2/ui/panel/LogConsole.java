@@ -2,9 +2,8 @@ package vgu.SoSe2026_Compnet2.ui.panel;
 
 import vgu.SoSe2026_Compnet2.ui.UIComponent;
 import vgu.SoSe2026_Compnet2.ui.object.LogText;
+import vgu.SoSe2026_Compnet2.util.DateFormatter;
 import vgu.SoSe2026_Compnet2.constants.UIMetrics;
-import vgu.SoSe2026_Compnet2.service.DateFormatter;
-
 import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;

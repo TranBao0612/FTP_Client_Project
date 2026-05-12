@@ -2,7 +2,6 @@ package vgu.SoSe2026_Compnet2.controller;
 
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import vgu.SoSe2026_Compnet2.ui.panel.LogConsole;
-import javafx.application.Platform;
 import javafx.scene.input.MouseButton;
 import javafx.scene.control.TableRow;
 
@@ -21,6 +20,7 @@ public final class ChangeDirectoryHandler {
      */
     public static Runnable toParent(Controller controller) {
         return () -> {
+            controller.inExecutingStateUI();
             new Thread(() -> {
                 boolean success = Command.cdup(controller);
                 if (success) {
@@ -41,6 +41,7 @@ public final class ChangeDirectoryHandler {
      */
     private static Runnable cdToChild(Controller controller, String child) {
         return () -> {
+            controller.inExecutingStateUI();
             new Thread(() -> {
                 System.out.println("Attempting to change directory to child: " + child);
                 boolean success = Command.cwd(controller, child);
@@ -81,22 +82,20 @@ public final class ChangeDirectoryHandler {
     }
 
     /**
-     * Log error to reflect a failed attempt to change directory.
+     * Log error to reflect a failed attempt to change directory and re-eanable execution.
      * @param controller instances stores all UI components
      */
     private static void updateUIOnFailure(Controller controller) {
-        Platform.runLater(() -> {
-            controller.logConsole.log("Failed to change directory.", LogConsole.TYPE_ERROR);
-        });
+        controller.readyStateUI();
+        controller.logConsole.log("Failed to change directory.", LogConsole.TYPE_ERROR);
     }
 
     /**
-     * Log success to reflect a successful attempt to change directory.
+     * Log success to reflect a successful attempt to change directory. 
+     *      Success followed by resfresh, so does not re-enable execution here.
      * @param controller instances stores all UI components
      */
     private static void updateUIOnSuccess(Controller controller) {
-        Platform.runLater(() -> {
-            controller.logConsole.log("Changed directory successfully.", LogConsole.TYPE_INFO);
-        });
+        controller.logConsole.log("Changed directory successfully.", LogConsole.TYPE_INFO);
     }
 }

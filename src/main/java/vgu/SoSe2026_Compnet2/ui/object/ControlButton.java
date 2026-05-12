@@ -3,8 +3,6 @@ package vgu.SoSe2026_Compnet2.ui.object;
 import vgu.SoSe2026_Compnet2.constants.UIMetrics;
 import vgu.SoSe2026_Compnet2.ui.UIComponent;
 import javafx.scene.control.Button;
-import javafx.concurrent.Task;
-import javafx.application.Platform;
 
 /**
  * A custom button class for control buttons in the FTP client UI. <br>

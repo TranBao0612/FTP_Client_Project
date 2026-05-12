@@ -1,8 +1,8 @@
 package vgu.SoSe2026_Compnet2;
 
 import vgu.SoSe2026_Compnet2.constants.UIMetrics;
-import vgu.SoSe2026_Compnet2.service.*;
 import vgu.SoSe2026_Compnet2.ui.panel.*;
+import vgu.SoSe2026_Compnet2.util.*;
 import vgu.SoSe2026_Compnet2.ui.object.ConnectionInfoLabel;
 import vgu.SoSe2026_Compnet2.controller.Controller;
 
@@ -23,6 +23,7 @@ public class MainGUI extends Application {
     private LogConsole logConsole = new LogConsole();
 
     // Controller
+    @SuppressWarnings("unused")
     private Controller controller = new Controller(connection, connectionInfoLabel, controlPanel, 
                                                             userFilePanel, serverFilePanel, logConsole);
 

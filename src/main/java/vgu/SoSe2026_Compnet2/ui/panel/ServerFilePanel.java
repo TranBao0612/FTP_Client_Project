@@ -1,9 +1,5 @@
 package vgu.SoSe2026_Compnet2.ui.panel;
 
-import javafx.scene.control.TableRow;
-import javafx.scene.input.MouseButton;
-import vgu.SoSe2026_Compnet2.data.FileMetadata;
-
 /**
  * Class representing the server file panel in the UI, which extends the abstract FilePanel.
  * The server file panel allows users to navigate the server's file system by 
@@ -17,7 +13,6 @@ public class ServerFilePanel extends FilePanel {
     public ServerFilePanel() {
         super();
         changeDirButton.setText("To Parent Folder");
-        disablePane();
     }
 
     /**

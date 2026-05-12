@@ -1,8 +1,10 @@
 package vgu.SoSe2026_Compnet2.controller;
 
-import vgu.SoSe2026_Compnet2.service.ValidateFTPResponse;
-import vgu.SoSe2026_Compnet2.service.Connection;
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
+import vgu.SoSe2026_Compnet2.util.Connection;
+import vgu.SoSe2026_Compnet2.util.ValidateFTPResponse;
+import vgu.SoSe2026_Compnet2.constants.ConnectionConstant;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.ArrayList;
@@ -61,21 +63,36 @@ public final class Command {
     }
 
     /**
-     * Send PASV command to the server to enter passive mode and establish a data connection
+     * Send PASV command to the server to enter passive mode and establish a data connection, with retry logic.
      * @param controller instances stores all UI components
      * @return Connection instance representing the data connection, or null if an error occurs.
      */
     public static Connection pasv(Controller controller) {
-        controller.sendToServer("PASV");
-        String response = controller.receiveFromServer();
-        if(ValidateFTPResponse.startWith(response, "227")) {
-            try {
-                return Connection.initializeFTPDataConnection(response);
-            } catch (Exception e) {
-                return null;
+        for (int i = 0; i < ConnectionConstant.PASSIVE_MODE_RETRY_LIMIT; i++) {
+            controller.sendToServer("PASV");
+            String response = controller.receiveFromServer();
+            if(ValidateFTPResponse.startWith(response, "227")) {
+                try {
+                    return Connection.initializeFTPDataConnection(response);
+                } catch (Exception ignore) {}
             }
         }
         return null;
+    }
+
+    /**
+     * Send TYPE I command to the server to set the transfer mode to binary, with retry logic.
+     * @param controller instances stores all UI components
+     * @return true if the server successfully changes to binary mode, false otherwise
+     */
+    public static boolean binaryMode(Controller controller) {
+        for (int i = 0; i < ConnectionConstant.BINARY_MODE_RETRY_LIMIT; i++) {
+            controller.sendToServer("TYPE I");
+            String response = controller.receiveFromServer();
+            if(ValidateFTPResponse.startWith(response, "200"))
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -92,10 +109,25 @@ public final class Command {
             return false;
     }
 
+    /**
+     * Send CWD command to the server to change the current directory to a specified subdirectory.
+     * @param controller instances stores all UI components
+     * @param subFolderName the name of the subdirectory to change into
+     * @return true if the directory change is successful, false otherwise
+     */
     public static boolean cwd(Controller controller, String subFolderName) {
         controller.sendToServer("CWD " + subFolderName);
         String response = controller.receiveFromServer();
         if(ValidateFTPResponse.startWith(response, "250"))
+            return true;
+        else
+            return false;
+    }
+
+    public static boolean quit(Controller controller) {
+        controller.sendToServer("QUIT");
+        String response = controller.receiveFromServer();
+        if(ValidateFTPResponse.startWith(response, "221"))
             return true;
         else
             return false;

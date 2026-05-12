@@ -1,4 +1,4 @@
-package vgu.SoSe2026_Compnet2.service;
+package vgu.SoSe2026_Compnet2.util;
 
 import vgu.SoSe2026_Compnet2.constants.LoginData;
 import vgu.SoSe2026_Compnet2.data.ConnectionData;

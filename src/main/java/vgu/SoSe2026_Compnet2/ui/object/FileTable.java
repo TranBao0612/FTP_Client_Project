@@ -2,11 +2,11 @@ package vgu.SoSe2026_Compnet2.ui.object;
 
 import vgu.SoSe2026_Compnet2.ui.UIComponent;
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.SelectionMode;
 import java.util.List;
 
 public class FileTable extends TableView<FileMetadata> implements UIComponent {
@@ -16,13 +16,18 @@ public class FileTable extends TableView<FileMetadata> implements UIComponent {
     private TableColumn<FileMetadata, String> lastModifiedCol = new TableColumn<>("Last Modified");
 
     public FileTable() {
-        // Add columns and set cell value factories
+        // Set columns
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         typeCol.setCellValueFactory(data -> 
                 new SimpleStringProperty(data.getValue().getType() == FileMetadata.FileType.DIRECTORY ? "Folder" : "File"));
         sizeCol.setCellValueFactory(new PropertyValueFactory<>("sizeInByte"));
         lastModifiedCol.setCellValueFactory(new PropertyValueFactory<>("lastModified"));
-        getColumns().addAll(nameCol, typeCol, sizeCol, lastModifiedCol);
+
+        // Add columns to the table
+        getColumns().add(nameCol);
+        getColumns().add(typeCol);
+        getColumns().add(sizeCol);
+        getColumns().add(lastModifiedCol);
 
         // Prohibited multi-row selection to avoid ambiguity in file interactions
         getSelectionModel().setCellSelectionEnabled(false);

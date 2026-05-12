@@ -1,4 +1,4 @@
-package vgu.SoSe2026_Compnet2.service;
+package vgu.SoSe2026_Compnet2.util;
 
 import vgu.SoSe2026_Compnet2.constants.ConnectionConstant;
 import java.net.Socket;
@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.net.InetSocketAddress;
 
 /**
  * This class represents a connection to an server.
@@ -20,18 +21,36 @@ public class Connection implements AutoCloseable {
     private BufferedReader in;
 
     /**
-     * Initialize a connection to the specified host and port, resources cleaned up automatically if construction fails.
+     * Initialize a connection to the specified host and port with an socket initialization timeout, 
+     *      resources cleaned up automatically if construction fails.
      * @param host the hostname or IP address of the server
      * @param port the port number to connect to (example: 21 for FTP control connection, 20 for FTP data connection)
+     * @param initializeTimeout the socket initialization timeout (ms); no timeout will be set if value <= 0
+    * @throws IOException if an I/O error occurs when creating the socket or getting the input/output streams
+     */
+    public Connection(String host, int port, int initializeTimeout) throws IOException {
+        this.host = host;
+        if (initializeTimeout <= 0) {
+            this.socket = new Socket(host, port);
+        } else {
+            this.socket = new Socket();
+            socket.connect(new InetSocketAddress(host, port), initializeTimeout);
+        }
+        this.out = new PrintWriter(socket.getOutputStream(), true);
+        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    }
+    /**
+     * Initialize a connection to the specified host and port with no socket initialization timeout.
+     * @param host the hostname or IP address of the server
+     * @param port the port number to connect to
      * @throws IOException if an I/O error occurs when creating the socket or getting the input/output streams
      */
     public Connection(String host, int port) throws IOException {
-        this.host = host;
-        this.socket = new Socket(host, port);
-        this.out = new PrintWriter(socket.getOutputStream(), true);
-        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        turnOnTimeout();
+        this(host, port, -1);
     }
+
+
+
     /**
      * Initializes a control connection to the specified FTP host.
      * @param host the hostname or IP address of the FTP server
@@ -53,7 +72,7 @@ public class Connection implements AutoCloseable {
         String[] connectionInfo = extractConnectionInfoFromFTPPassiveModeResponse(enterPassiveModeResponse);
         String host = String.join(".", connectionInfo[0], connectionInfo[1], connectionInfo[2], connectionInfo[3]);
         int port = Integer.parseInt(connectionInfo[4]) * 256 + Integer.parseInt(connectionInfo[5]);
-        return new Connection(host, port);
+        return new Connection(host, port, ConnectionConstant.DATA_CONN_INIT_TIMEOUT_MILLISEC);
     }
 
     /**

@@ -2,7 +2,7 @@ package vgu.SoSe2026_Compnet2;
 
 import vgu.SoSe2026_Compnet2.constants.LoginData;
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
-import vgu.SoSe2026_Compnet2.service.Connection;
+import vgu.SoSe2026_Compnet2.util.Connection;
 
 public class Test {
     private static volatile boolean dataConnectionActive = false;

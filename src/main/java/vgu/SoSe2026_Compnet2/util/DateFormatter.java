@@ -1,4 +1,4 @@
-package vgu.SoSe2026_Compnet2.service;
+package vgu.SoSe2026_Compnet2.util;
 
 import java.util.Date;
 import java.time.LocalDateTime;

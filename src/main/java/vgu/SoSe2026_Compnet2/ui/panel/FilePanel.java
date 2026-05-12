@@ -43,6 +43,14 @@ public abstract class FilePanel extends BorderPane implements UIComponent {
      * Set action for double-clicking a folder in the file table, to be implemented in subclasses.
      */
     public abstract void setDoubleClickFolderAction();
+
+    public String getCurrentDirectory() {
+        String[] currentDir = new String[1];
+        Platform.runLater(() -> {
+            currentDir[0] = directoryDisplayer.getText();
+        });
+        return currentDir[0];
+    }
     
     /**
      * Get the metadata of the currently selected file in the file table.
@@ -64,21 +72,28 @@ public abstract class FilePanel extends BorderPane implements UIComponent {
     }
 
     /**
-     * Enable the file panel for user interactions, by enabling the change directory button.
+     * Enable the file panel for user interactions, by enabling the change directory button and the file table interactions.
      */
-    public void enablePane() {
+    public void enable() {
         Platform.runLater(() -> {
             changeDirButton.setDisable(false);
+            fileTable.setDisable(false);
         });
     }
     /**
-     * Disable the file panel for user interactions, by disabling the change directory button 
-     *          and clear the pane.
+     * Disable the file panel for user interactions, by disabling the change directory button and the file table interactions.
      */
-    public void disablePane() {
+    public void disable() {
         Platform.runLater(() -> {
             changeDirButton.setDisable(true);
+            fileTable.setDisable(true);
         });
+    }
+    /**
+     * Disable the file panel and clear its contents.
+     */
+    public void disableAndClear() {
+        disable();
         clear();
     }
     /**

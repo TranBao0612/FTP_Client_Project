@@ -1,10 +1,9 @@
 package vgu.SoSe2026_Compnet2.controller;
 
 import vgu.SoSe2026_Compnet2.data.ConnectionData;
-import vgu.SoSe2026_Compnet2.service.*;
 import vgu.SoSe2026_Compnet2.ui.panel.LogConsole;
+import vgu.SoSe2026_Compnet2.util.*;
 import vgu.SoSe2026_Compnet2.constants.LoginData;
-import javafx.application.Platform;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -17,6 +16,7 @@ public class ConnectionHandler implements Runnable {
     /**
      * Handle the connection logic when the connect button is clicked. <br>
      * The connection process includes: connect to the server and handle login procedure.
+     *      Refresh automatically if the connection and login are successful, or log error message if any step fails. <br> 
      * @param controller instances stores all UI components
      */
     public ConnectionHandler(Controller controller) {
@@ -26,7 +26,7 @@ public class ConnectionHandler implements Runnable {
     @Override
     public void run() {
         // Disable the connect button to prevent multiple connection attempts while connecting or disconnecting.
-        controller.controlPanel.connection.setDisable(true);
+        controller.inExecutingStateUI();
         // Must enable again after finish, impleneted in both connect() and disconnect() methods to ensure the button is enabled again
         if (!controller.connectButtonIsConnect()) {
             connect();
@@ -52,10 +52,7 @@ public class ConnectionHandler implements Runnable {
                 String welcomeMessage = controller.receiveFromServer();
                 if (ValidateFTPResponse.startWith(welcomeMessage, "220")) {
                     if (loginSuccessful(connectionData)) {
-                        Platform.runLater(() -> {
-                            updateUIOnSuccess(connectionData);
-                        });
-                        // Button will be enabled again in the RefreshHandler, so do not need to enable it here.
+                        updateUIOnSuccess(connectionData);
                         new RefreshHandler(controller).run();
                     }
                 } else {
@@ -66,10 +63,6 @@ public class ConnectionHandler implements Runnable {
                 controller.closeConnection(true, "Unknown host: " + e.getMessage());
             } catch (IOException e) {
                 controller.closeConnection(true, "Failed to connect to server: " + e.getMessage());
-            } finally {
-                Platform.runLater(() -> {
-                    controller.controlPanel.connection.setDisable(false);
-                });
             }
         }).start();
     }
@@ -80,8 +73,13 @@ public class ConnectionHandler implements Runnable {
      * This method run on JavaxFX application thread.
      */
     private void disconnect() {
-        controller.closeConnection(false, "Disconnected from server.");
-        controller.controlPanel.connection.setDisable(false);
+        new Thread(() -> {
+            if (Command.quit(controller)) {
+                controller.closeConnection(false, "Quiting success, disconnected gracefully from server.");
+            } else {
+                controller.closeConnection(true, "Failed to disconnect from server properly.");
+            }
+        }).start();
     }
 
     /**
@@ -90,7 +88,6 @@ public class ConnectionHandler implements Runnable {
      */
     private void updateUIOnSuccess(ConnectionData data) {
         controller.connectionInfoLabel.connected(data.getServerURL(), data.isAnonymous(), data.getUsername());
-        controller.serverFilePanel.enablePane();
         controller.logConsole.log("Successfully connected to " + data.getServerURL(), LogConsole.TYPE_INFO);
     }
 

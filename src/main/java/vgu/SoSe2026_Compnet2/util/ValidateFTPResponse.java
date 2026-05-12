@@ -1,4 +1,4 @@
-package vgu.SoSe2026_Compnet2.service;
+package vgu.SoSe2026_Compnet2.util;
 
 /**
  * A utility class to validate FTP server responses.

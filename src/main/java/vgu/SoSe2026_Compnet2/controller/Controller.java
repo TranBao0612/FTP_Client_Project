@@ -1,8 +1,9 @@
 package vgu.SoSe2026_Compnet2.controller;
 
 import vgu.SoSe2026_Compnet2.ui.panel.*;
+import vgu.SoSe2026_Compnet2.util.Connection;
 import vgu.SoSe2026_Compnet2.ui.object.ConnectionInfoLabel;
-import vgu.SoSe2026_Compnet2.service.Connection;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -37,6 +38,8 @@ public class Controller implements AutoCloseable {
         // Add action listeners for server file panel
         serverFilePanel.addCDButtonAction(ChangeDirectoryHandler.toParent(this));
         ChangeDirectoryHandler.setCdToChild(this);
+        // Start with disconnected state
+        disconnectedStateUI();
     }
 
 
@@ -161,8 +164,7 @@ public class Controller implements AutoCloseable {
 
     /**
      * Closing the connection, 
-     *      disabling control buttons, 
-     *      clearing file panels, 
+     *      update UI to reflect the disconnected state,
      *      and logging the error message.
      * @param isError Whether the event is an error.
      * @param message The error message to log.
@@ -173,12 +175,7 @@ public class Controller implements AutoCloseable {
             // Close connection
             connection.close();
             // Update connection info label
-            connectionInfoLabel.disconnected();
-            // Disable control buttons
-            controlPanel.disableAllExceptConnect();
-            // Clear server file panels
-            serverFilePanel.disablePane();
-            serverFilePanel.clear();
+            disconnectedStateUI();
             // Log messages
             logConsole.log(message, isError ? LogConsole.TYPE_ERROR : LogConsole.TYPE_INFO);
             if (isError) 
@@ -192,6 +189,35 @@ public class Controller implements AutoCloseable {
         }
         // Set connection to null so that isConnected() will return false
         connection = null;
+    }
+
+    /**
+     * Update the UI to reflect the disconnected state by 
+     *      updating the connection info label, disabling control buttons, and clearing server file panel.
+      * This method is called when the connection is closed, either due to an error or a normal disconnection.
+     */
+    public void disconnectedStateUI() {
+        connectionInfoLabel.disconnected();
+        controlPanel.disableAll(true);
+        serverFilePanel.disableAndClear();
+    }
+
+    /**
+     * Update the UI to reflect the executing state by 
+     *      disabling all actions required communication with the server.
+     */
+    public void inExecutingStateUI() {
+        controlPanel.disableAll(false);
+        serverFilePanel.disable();
+    }
+
+    /**
+     * Update the UI to reflect the ready state by 
+     *      enabling all actions and interactions.
+     */
+    public void readyStateUI() {
+        controlPanel.enableAll();
+        serverFilePanel.enable();
     }
 
     /**
@@ -222,15 +248,6 @@ public class Controller implements AutoCloseable {
      */
     public boolean connectButtonIsConnect() {
         return connection != null;
-    }
-
-    /**
-     * Disable buttons that require a data connection, e.g., refresh, download, and upload buttons.
-     */
-    public void disableRequiredDataConnectionButtons() {
-        controlPanel.refresh.setDisable(true);
-        controlPanel.download.setDisable(true);
-        controlPanel.upload.setDisable(true);
     }
 
     @Override

@@ -25,15 +25,22 @@ public class ControlButtonPanel extends VBox {
 
         getChildren().addAll(connection, refresh, createFolder, delete, download, upload);
         setAlignment(Pos.CENTER);
-        disableAllExceptConnect();
     }
 
     /**
-     * Disable all buttons except the Connect button. Should be called when there is no connection.
+     * Disable all buttons except the Connect button. 
+     * If text is set to "Connect", the Connect button will not be disabled.
+     * @param setTextToConnect whether to set the Connect button text to "Connect" or "Disconnect"
      */
-    public void disableAllExceptConnect() {
+    public void disableAll(boolean setTextToConnect) {
         Platform.runLater(() -> {
-            connection.setText("Connect");
+            if (setTextToConnect) {
+                connection.setText("Connect");
+                connection.setDisable(false);
+            } else {
+                connection.setText("Disconnect");
+                connection.setDisable(true);
+            }
             refresh.setDisable(true);
             createFolder.setDisable(true);
             delete.setDisable(true);
@@ -48,6 +55,7 @@ public class ControlButtonPanel extends VBox {
     public void enableAll() {
         Platform.runLater(() -> {
             connection.setText("Disconnect");
+            connection.setDisable(false);
             refresh.setDisable(false);
             createFolder.setDisable(false);
             delete.setDisable(false);

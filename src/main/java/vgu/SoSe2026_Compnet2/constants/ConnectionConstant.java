@@ -5,5 +5,9 @@ package vgu.SoSe2026_Compnet2.constants;
  */
 public final class ConnectionConstant {
     public static final int FTP_CONTROL_PORT = 21;
-    public static final int TIMEOUT_MILLISEC = 10000;
+    public static final int TIMEOUT_MILLISEC = 5000;
+    public static final int DATA_CONN_INIT_TIMEOUT_MILLISEC = 1000;
+
+    public static final int PASSIVE_MODE_RETRY_LIMIT = 4;
+    public static final int BINARY_MODE_RETRY_LIMIT = 2;
 }
