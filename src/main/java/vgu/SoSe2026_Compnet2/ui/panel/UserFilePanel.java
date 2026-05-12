@@ -3,13 +3,13 @@ package vgu.SoSe2026_Compnet2.ui.panel;
 import vgu.SoSe2026_Compnet2.constants.Directory;
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import vgu.SoSe2026_Compnet2.util.DirectoryPicker;
+import vgu.SoSe2026_Compnet2.constants.Directory;
 import javafx.scene.control.TableRow;
 import javafx.scene.input.MouseButton;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.io.File;
-import java.nio.file.Path;
 
 /**
  * Class representing the user file panel in the UI, which extends the abstract FilePanel.
@@ -59,7 +59,7 @@ public class UserFilePanel extends FilePanel {
                 // Double-click and primary mouse button to open folder
                 if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                     if (row.getItem() != null && row.getItem().getType() == FileMetadata.FileType.DIRECTORY) {
-                        reload(Path.of(directoryDisplayer.getText()).resolve(row.getItem().getName()).toString());
+                        reload(Directory.generateFilePath(directoryDisplayer.getText(), row.getItem().getName()));
                     }
                 }
             });

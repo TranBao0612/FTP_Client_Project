@@ -66,6 +66,13 @@ public abstract class FilePanel extends BorderPane implements UIComponent {
         return Directory.generateFilePath(getCurrentDirectory(), selectedFile.getName());
     }
 
+    public String getSelectedFileAbsolutePath() {
+        FileMetadata selectedFile = getSelectedFile();
+        if (selectedFile == null) 
+            return null;
+        return getAbsolutePath(selectedFile);
+    }
+
     /**
      * Enable the file panel for user interactions, by enabling the change directory button and the file table interactions.
      */
