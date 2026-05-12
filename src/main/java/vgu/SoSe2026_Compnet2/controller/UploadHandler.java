@@ -1,11 +1,9 @@
 package vgu.SoSe2026_Compnet2.controller;
 
-import vgu.SoSe2026_Compnet2.constants.Directory;
 import vgu.SoSe2026_Compnet2.util.Connection;
 import vgu.SoSe2026_Compnet2.util.ValidateSelectedFile;
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import vgu.SoSe2026_Compnet2.ui.panel.LogConsole;
-import java.io.File;
 
 /**
  * Handles the upload process for a selected file from the user's local directory to the server.
@@ -30,7 +28,7 @@ public class UploadHandler implements Runnable {
         // Disable UI interactions during the upload process
         controller.inExecutingStateUI();
         // Validate that a file is selected in the user file panel before attempting to upload
-        FileMetadata selectedFile = ValidateSelectedFile.validate(controller.userFilePanel);
+        FileMetadata selectedFile = ValidateSelectedFile.isFile(controller.userFilePanel);
         if (selectedFile == null) {
             controller.readyStateUI();
             return;
@@ -38,16 +36,21 @@ public class UploadHandler implements Runnable {
         String userFilePath = controller.userFilePanel.getAbsolutePath(selectedFile);
         new Thread(() -> {
             // Setup prerequisites
-            if (!Command.binaryMode(controller))
+            if (!Command.typeI(controller)) {
                 updateUIOnFailed("Failed to set binary mode for file transfer.");
+                return;
+            }
             Connection dataConnection = Command.pasv(controller);
-            if (dataConnection == null)
+            if (dataConnection == null) {
                 updateUIOnFailed("Failed to establish data connection for file transfer.");
+                return;
+            }
             // Upload file through data connection
             if (!Command.stor(controller, dataConnection, selectedFile.getName(), userFilePath)) {
                 updateUIOnFailed("Failed to upload file.");
             } else {
                 updateUIOnSuccess();
+                // Refresh to reflect the newly uploaded file
                 new RefreshHandler(controller).run();
             }
         }).start();
@@ -56,20 +59,20 @@ public class UploadHandler implements Runnable {
 
 
     /**
-     * Update the UI and log an error message if the download process fails.
+     * Update the UI and log an error message if the upload process fails.
      * @param errorMessage the error message to be logged in the console
      */
     private void updateUIOnFailed(String errorMessage) {
-        controller.logConsole.log(errorMessage, LogConsole.TYPE_ERROR);
         controller.readyStateUI();
+        controller.logConsole.log(errorMessage, LogConsole.TYPE_ERROR);
     }
 
     /**
-    * Update the UI and log a success message if the download process succeeds.
+    * Update the UI and log a success message if the upload process succeeds.
     */
     private void updateUIOnSuccess() {
-        controller.logConsole.log("File uploaded successfully.", LogConsole.TYPE_INFO);
         controller.readyStateUI();
+        controller.logConsole.log("File uploaded successfully.", LogConsole.TYPE_INFO);
     }
     
 }

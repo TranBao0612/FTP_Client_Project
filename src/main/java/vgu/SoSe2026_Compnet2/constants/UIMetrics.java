@@ -2,6 +2,9 @@ package vgu.SoSe2026_Compnet2.constants;
 
 import javafx.scene.Scene;
 
+/**
+ * Defines the UI metrics for the application, for ease of maintenance and consistency.
+ */
 public final class UIMetrics {
     /**
      * Prefered height for each text line in UI.

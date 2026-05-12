@@ -2,7 +2,6 @@ package vgu.SoSe2026_Compnet2;
 
 import vgu.SoSe2026_Compnet2.constants.UIMetrics;
 import vgu.SoSe2026_Compnet2.ui.panel.*;
-import vgu.SoSe2026_Compnet2.util.*;
 import vgu.SoSe2026_Compnet2.ui.object.ConnectionInfoLabel;
 import vgu.SoSe2026_Compnet2.controller.Controller;
 
@@ -12,11 +11,8 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class MainGUI extends Application {
-    // Connection + Host info
-    Connection connection = null;
-    ConnectionInfoLabel connectionInfoLabel = new ConnectionInfoLabel();
-
-    // Panels
+    // Connection label & Panels
+    private ConnectionInfoLabel connectionInfoLabel = new ConnectionInfoLabel();
     private ControlButtonPanel controlPanel = new ControlButtonPanel();
     private UserFilePanel userFilePanel = new UserFilePanel();
     private ServerFilePanel serverFilePanel = new ServerFilePanel();
@@ -24,7 +20,7 @@ public class MainGUI extends Application {
 
     // Controller
     @SuppressWarnings("unused")
-    private Controller controller = new Controller(connection, connectionInfoLabel, controlPanel, 
+    private Controller controller = new Controller(connectionInfoLabel, controlPanel, 
                                                             userFilePanel, serverFilePanel, logConsole);
 
 
@@ -32,6 +28,8 @@ public class MainGUI extends Application {
     public void start(Stage stage) {
         // Layout
         BorderPane root = new BorderPane();
+        // VBox connectionInfoBox = new VBox(connectionInfoLabel);
+        // connectionInfoBox.setAlignment(Pos.CENTER);
         root.setTop(connectionInfoLabel);
         root.setLeft(serverFilePanel);
         root.setRight(userFilePanel);

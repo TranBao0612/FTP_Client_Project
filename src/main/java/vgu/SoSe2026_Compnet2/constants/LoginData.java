@@ -1,7 +1,7 @@
 package vgu.SoSe2026_Compnet2.constants;
 
 /**
- * This interface defines constants for FTP login data, 
+ * Defines constants for FTP login data, 
  *      including usernames and passwords for connections.
  */
 public final class LoginData {

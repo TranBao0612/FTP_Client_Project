@@ -30,7 +30,7 @@ public class DownloadHandler implements Runnable {
         // Disable UI interactions during the download process
         controller.inExecutingStateUI();
         // Validate that a file is selected in the user file panel before attempting to download
-        FileMetadata selectedFile = ValidateSelectedFile.validate(controller.serverFilePanel);
+        FileMetadata selectedFile = ValidateSelectedFile.isFile(controller.serverFilePanel);
         if (selectedFile == null) {
             controller.readyStateUI();
             return;
@@ -38,12 +38,16 @@ public class DownloadHandler implements Runnable {
         String serverFile = selectedFile.getName();
         new Thread(() -> {
             // Setup prerequisites
-            if (!Command.binaryMode(controller))
+            if (!Command.typeI(controller)) {
                 updateUIOnFailed("Failed to set binary mode for file transfer.");
+                return;
+            }
             Connection dataConnection = Command.pasv(controller);
             String userFile = Directory.generateFilePath(controller.userFilePanel.getCurrentDirectory(), serverFile);
-            if (dataConnection == null)
+            if (dataConnection == null) {
                 updateUIOnFailed("Failed to establish data connection for file transfer.");
+                return;
+            }
             // download file through data connection
             if (!Command.retr(controller, dataConnection, serverFile, userFile)) {
                 File deleteCorruptedFile = new File(userFile);
@@ -52,6 +56,7 @@ public class DownloadHandler implements Runnable {
                 updateUIOnFailed("Failed to download file: " + serverFile);
             } else {
                 updateUIOnSuccess();
+                // Refresh after the download operation is completed
                 new RefreshHandler(controller).run();
             }
         }).start();
@@ -64,16 +69,16 @@ public class DownloadHandler implements Runnable {
      * @param errorMessage the error message to be logged in the console
      */
     private void updateUIOnFailed(String errorMessage) {
-        controller.logConsole.log(errorMessage, LogConsole.TYPE_ERROR);
         controller.readyStateUI();
+        controller.logConsole.log(errorMessage, LogConsole.TYPE_ERROR);
     }
 
     /**
      * Update the UI and log a success message if the download process succeeds.
      */
     private void updateUIOnSuccess() {
-        controller.logConsole.log("File downloaded successfully.", LogConsole.TYPE_INFO);
         controller.readyStateUI();
+        controller.logConsole.log("File downloaded successfully.", LogConsole.TYPE_INFO);
     }
     
 }

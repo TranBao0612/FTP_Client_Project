@@ -3,7 +3,6 @@ package vgu.SoSe2026_Compnet2.ui.panel;
 import vgu.SoSe2026_Compnet2.constants.Directory;
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import vgu.SoSe2026_Compnet2.util.DirectoryPicker;
-import vgu.SoSe2026_Compnet2.constants.Directory;
 import javafx.scene.control.TableRow;
 import javafx.scene.input.MouseButton;
 

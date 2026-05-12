@@ -3,7 +3,7 @@ package vgu.SoSe2026_Compnet2.constants;
 import java.nio.file.Path;
 
 /**
- * A utility class that holds constant values related to directory paths and file management.
+ * Defines constant values related to directory paths and file management.
  */
 public final class Directory {
     public static final String STYLE_CSS_PATH = "/css/style.css";

@@ -14,6 +14,7 @@ public class ConnectionInfoLabel extends Label implements UIComponent {
      */
     public ConnectionInfoLabel() {
         disconnected();
+        setStyle();
     }
 
     /**

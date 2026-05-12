@@ -53,6 +53,7 @@ public class ConnectionHandler implements Runnable {
                 if (ValidateFTPResponse.startWith(welcomeMessage, "220")) {
                     if (loginSuccessful(connectionData)) {
                         updateUIOnSuccess(connectionData);
+                        // Automatically refresh the server file panel after successful connection and login.
                         new RefreshHandler(controller).run();
                     }
                 } else {
@@ -87,6 +88,7 @@ public class ConnectionHandler implements Runnable {
      * @param data The connection data used to establish the connection, including server URL, username, and whether it's an anonymous login.
      */
     private void updateUIOnSuccess(ConnectionData data) {
+        controller.readyStateUI();
         controller.connectionInfoLabel.connected(data.getServerURL(), data.isAnonymous(), data.getUsername());
         controller.logConsole.log("Successfully connected to " + data.getServerURL(), LogConsole.TYPE_INFO);
     }

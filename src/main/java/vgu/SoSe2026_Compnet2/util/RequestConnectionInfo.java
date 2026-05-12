@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox;
  * Utility class for displaying a dialog to request 
  *      FTP connection information from the user, including server URL, username, and password.
  */
-public class RequestConnectionInfo extends Dialog<ConnectionData> {
+public final class RequestConnectionInfo extends Dialog<ConnectionData> {
     private CheckBox isAnonymousLogin = new CheckBox("Anonymous Login");
     private TextField serverURLField = new TextField();
     private TextField usernameField = new TextField();

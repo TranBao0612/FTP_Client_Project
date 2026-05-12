@@ -25,6 +25,7 @@ public final class ChangeDirectoryHandler {
                 boolean success = Command.cdup(controller);
                 if (success) {
                     updateUIOnSuccess(controller);
+                    // Refresh to update the file table and current directory label.
                     new RefreshHandler(controller).run();
                 } else {
                     updateUIOnFailure(controller);
@@ -46,6 +47,7 @@ public final class ChangeDirectoryHandler {
                 boolean success = Command.cwd(controller, child);
                 if (success) {
                     updateUIOnSuccess(controller);
+                    // Refresh to update the file table and current directory label.
                     new RefreshHandler(controller).run();
                 }
                 else {
@@ -91,10 +93,10 @@ public final class ChangeDirectoryHandler {
 
     /**
      * Log success to reflect a successful attempt to change directory. 
-     *      Success followed by resfresh, so does not re-enable execution here.
      * @param controller instances stores all UI components
      */
     private static void updateUIOnSuccess(Controller controller) {
+        controller.readyStateUI();
         controller.logConsole.log("Changed directory successfully.", LogConsole.TYPE_INFO);
     }
 }

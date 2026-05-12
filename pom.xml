@@ -100,14 +100,6 @@
                 <mainClass>vgu.SoSe2026_Compnet2.MainGUI</mainClass>
             </configuration>
         </plugin>
-        <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.1.0</version>
-            <configuration>
-                <mainClass>vgu.SoSe2026_Compnet2.Test</mainClass>
-            </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
   </build>

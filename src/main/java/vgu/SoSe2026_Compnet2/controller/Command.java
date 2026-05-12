@@ -4,8 +4,6 @@ import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import vgu.SoSe2026_Compnet2.util.Connection;
 import vgu.SoSe2026_Compnet2.util.ValidateFTPResponse;
 import vgu.SoSe2026_Compnet2.constants.ConnectionConstant;
-import vgu.SoSe2026_Compnet2.constants.Directory;
-import vgu.SoSe2026_Compnet2.ui.panel.LogConsole;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -60,7 +58,7 @@ public final class Command {
      * @param controller instances stores all UI components
      * @return true if the server successfully changes to binary mode, false otherwise
      */
-    public static boolean binaryMode(Controller controller) {
+    public static boolean typeI(Controller controller) {
         for (int i = 0; i < ConnectionConstant.BINARY_MODE_RETRY_LIMIT; i++) {
             controller.sendToServer("TYPE I");
             String response = controller.receiveFromServer();
@@ -203,6 +201,54 @@ public final class Command {
         }
         // If the server responds with an error code, return false
         return false;
+    }
+
+
+    /**
+     * Send MKD command to the server to create a new folder in the current directory of server.
+     * @param controller instances stores all UI components
+     * @param newFolderName The name of the new folder to be created on the server.
+     * @return true if the folder is created successfully, false otherwise.
+     */
+    public static boolean mkd(Controller controller, String newFolderName) {
+        controller.sendToServer("MKD " + newFolderName);
+        String response = controller.receiveFromServer();
+        if(ValidateFTPResponse.startWith(response, "257"))
+            return true;
+        else
+            return false;
+    }
+
+
+    /**
+     * Send DELE command to the server to delete a file in the current directory of server.
+     * @param controller instances stores all UI components
+     * @param filename The name of the file to be deleted on the server.
+     * @return true if the file is deleted successfully, false otherwise.
+     */
+    public static boolean dele(Controller controller, String filename) {
+        controller.sendToServer("DELE " + filename);
+        String response = controller.receiveFromServer();
+        if(ValidateFTPResponse.startWith(response, "250"))
+            return true;
+        else
+            return false;
+    }
+
+
+    /**
+     * Send RMD command to the server to delete a folder in the current directory of server.
+     * @param controller instances stores all UI components
+     * @param folderName The name of the folder to be deleted on the server.
+     * @return true if the folder is deleted successfully, false otherwise.
+     */
+    public static boolean rmd(Controller controller, String folderName) {
+        controller.sendToServer("RMD " + folderName);
+        String response = controller.receiveFromServer();
+        if(ValidateFTPResponse.startWith(response, "250"))
+            return true;
+        else
+            return false;
     }
 
 
