@@ -44,6 +44,12 @@ public class UploadHandler implements Runnable {
             if (dataConnection == null)
                 updateUIOnFailed("Failed to establish data connection for file transfer.");
             // Upload file through data connection
+            if (!Command.stor(controller, dataConnection, selectedFile.getName(), userFilePath)) {
+                updateUIOnFailed("Failed to upload file.");
+            } else {
+                updateUIOnSuccess();
+                new RefreshHandler(controller).run();
+            }
         }).start();
 
     }

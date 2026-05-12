@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.io.OutputStream;
 import java.io.InputStream;
 import java.io.FileOutputStream;
+import java.io.FileInputStream;
 
 /**
  * Command class to handle the FTP commands sent to the server and produce results.
@@ -136,19 +137,20 @@ public final class Command {
      * Send RETR command to the server to retrieve a file from the current directory of server.
      * @param controller instances stores all UI components
      * @param dataConnection The data connection to receive the file data from.
-     * @param downloadFilename The name of the file to retrieve.
+     * @param serverFilename The name of the file to retrieve from the server.
+     * @param userFilePath The path where the downloaded file will be saved.
      * @return true if the file retrieval is successful, false otherwise.
      */
-    public static boolean retr(Controller controller, Connection dataConnection, String downloadFilename, String savePath) {
-        controller.sendToServer("RETR " + downloadFilename);
+    public static boolean retr(Controller controller, Connection dataConnection, String serverFilename, String userFilePath) {
+        controller.sendToServer("RETR " + serverFilename);
         // Server confirms that it is ready to transfer by "150" response
         if (!ValidateFTPResponse.startWith(controller.receiveFromServer(), "150"))
             return false;
         // Receive file data through data connection
         try {
             InputStream dataInputStream = dataConnection.getInStream();
-            FileOutputStream fileOutputStream = new FileOutputStream(savePath);
-            byte[] buffer = new byte[4096];
+            FileOutputStream fileOutputStream = new FileOutputStream(userFilePath);
+            byte[] buffer = new byte[ConnectionConstant.DATA_TRANSFER_CHUNK_SIZE];
             int bytesRead;
             while ((bytesRead = dataInputStream.read(buffer)) != -1) {
                 fileOutputStream.write(buffer, 0, bytesRead);
@@ -171,17 +173,36 @@ public final class Command {
      * Send STOR command to the server to store a file in the current directory of user.
      * @param controller instances stores all UI components
      * @param dataConnection The data connection to send the file data through.
-     * @param filename The name of the file to store.
+     * @param serverFilename The name of the file to store to the server.
+     * @param userFilePath The path of the file on the user's local system.
      * @return true if the file storage is successful, false otherwise.
      */
-    public static boolean stor(Controller controller, Connection dataConnection, String filename) {
-        controller.sendToServer("STOR " + filename);
+    public static boolean stor(Controller controller, Connection dataConnection, String serverFilename, String userFilePath) {
+        controller.sendToServer("STOR " + serverFilename);
         // Server confirms that it is ready to transfer by "150" response
         if (!ValidateFTPResponse.startWith(controller.receiveFromServer(), "150"))
             return false;
         // Send file data through data connection
-        // ... (implementation for sending file data)
-        return true;
+        try {
+            OutputStream dataOutputStream = dataConnection.getOutStream();
+            FileInputStream fileInputStream = new FileInputStream(userFilePath);
+            byte[] buffer = new byte[ConnectionConstant.DATA_TRANSFER_CHUNK_SIZE];
+            int bytesRead;
+            while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                dataOutputStream.write(buffer, 0, bytesRead);
+            }
+            fileInputStream.close();
+            dataConnection.close();
+        } catch (Exception e) {
+            return false;
+        }
+        // Wait for the server to confirm the transfer is successful
+        String finalResponse = controller.receiveFromServer();
+        if (ValidateFTPResponse.startWith(finalResponse, "226")) {
+            return true;
+        }
+        // If the server responds with an error code, return false
+        return false;
     }
 
 

@@ -36,6 +36,7 @@ public class Controller implements AutoCloseable {
         controlPanel.connection.addAction(new ConnectionHandler(this));
         controlPanel.refresh.addAction(new RefreshHandler(this));
         controlPanel.download.addAction(new DownloadHandler(this));
+        controlPanel.upload.addAction(new UploadHandler(this));
         // Add action listeners for server file panel
         serverFilePanel.addCDButtonAction(ChangeDirectoryHandler.toParent(this));
         ChangeDirectoryHandler.setCdToChild(this);

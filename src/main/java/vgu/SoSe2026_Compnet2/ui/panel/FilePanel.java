@@ -15,8 +15,9 @@ import java.util.List;
  * The file panel consists of a directory displayer, a change directory button, a file table, and a folder summary.
  */
 public abstract class FilePanel extends BorderPane implements UIComponent {
+    private String currentDirectory = "";
     public ControlButton changeDirButton = new ControlButton("Change Directory");
-    public DirectoryDisplayer directoryDisplayer = new DirectoryDisplayer("");
+    public DirectoryDisplayer directoryDisplayer = new DirectoryDisplayer(currentDirectory);
     public FileTable fileTable = new FileTable();
     public FolderSummary folderSummary = new FolderSummary();
 
@@ -45,7 +46,7 @@ public abstract class FilePanel extends BorderPane implements UIComponent {
     public abstract void setDoubleClickFolderAction();
 
     public String getCurrentDirectory() {
-        return directoryDisplayer.getText();
+        return currentDirectory;
     }
     
     /**
@@ -117,6 +118,7 @@ public abstract class FilePanel extends BorderPane implements UIComponent {
      */
 
     public void reload(String currentDir, List<FileMetadata> files) {
+        currentDirectory = currentDir;
         new Thread(() -> {
             // Remove unknown file types & Calculate summary
             files.removeIf(file -> file.getType() == FileMetadata.FileType.UNKNOWN);
@@ -133,7 +135,7 @@ public abstract class FilePanel extends BorderPane implements UIComponent {
             }
             // Update UI
             Platform.runLater(() -> {
-                directoryDisplayer.setText(currentDir);
+                directoryDisplayer.setText(currentDirectory);
                 fileTable.setFiles(files);
                 folderSummary.updateSummary(folderCount[0], fileCount[0], totalSize[0]);
             });
