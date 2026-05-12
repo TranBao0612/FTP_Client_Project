@@ -2,13 +2,13 @@ package vgu.SoSe2026_Compnet2.ui.panel;
 
 import vgu.SoSe2026_Compnet2.ui.UIComponent;
 import vgu.SoSe2026_Compnet2.constants.UIMetrics;
+import vgu.SoSe2026_Compnet2.constants.Directory;
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import vgu.SoSe2026_Compnet2.ui.object.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.application.Platform;
 import java.util.List;
-import java.nio.file.Path;
 
 /**
  * Abstract class representing a file panel in the UI, which can be either a user file panel or a server file panel. 
@@ -45,11 +45,7 @@ public abstract class FilePanel extends BorderPane implements UIComponent {
     public abstract void setDoubleClickFolderAction();
 
     public String getCurrentDirectory() {
-        String[] currentDir = new String[1];
-        Platform.runLater(() -> {
-            currentDir[0] = directoryDisplayer.getText();
-        });
-        return currentDir[0];
+        return directoryDisplayer.getText();
     }
     
     /**
@@ -64,11 +60,10 @@ public abstract class FilePanel extends BorderPane implements UIComponent {
      * Get the absolute path of the currently selected file in the file table.
      * @return the absolute path of the selected file, or null if no file is selected
      */
-    public String getSelectedFileAbsolutePath() {
-        FileMetadata selectedFile = getSelectedFile();
+    public String getAbsolutePath(FileMetadata selectedFile) {
         if (selectedFile == null) 
             return null;
-        return Path.of(directoryDisplayer.getText()).resolve(selectedFile.getName()).toString();
+        return Directory.generateFilePath(getCurrentDirectory(), selectedFile.getName());
     }
 
     /**

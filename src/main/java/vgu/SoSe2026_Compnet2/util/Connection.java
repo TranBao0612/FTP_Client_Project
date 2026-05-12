@@ -5,6 +5,8 @@ import java.net.Socket;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.net.InetSocketAddress;
@@ -19,6 +21,8 @@ public class Connection implements AutoCloseable {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
+    private OutputStream outStream;
+    private InputStream inStream;
 
     /**
      * Initialize a connection to the specified host and port with an socket initialization timeout, 
@@ -38,6 +42,8 @@ public class Connection implements AutoCloseable {
         }
         this.out = new PrintWriter(socket.getOutputStream(), true);
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.outStream = socket.getOutputStream();
+        this.inStream = socket.getInputStream();
     }
     /**
      * Initialize a connection to the specified host and port with no socket initialization timeout.
@@ -93,6 +99,21 @@ public class Connection implements AutoCloseable {
      */
     public String getHost() {
         return host;
+    }
+
+    /**
+     * Reserves for future use to get the output stream for file transfer.
+     * @return the output stream for file transfer
+     */
+    public OutputStream getOutStream() {
+        return outStream;
+    }
+    /**
+     * Reserves for future use to get the input stream for file transfer.
+     * @return the input stream for file transfer
+     */
+    public InputStream getInStream() {
+        return inStream;
     }
 
     /**

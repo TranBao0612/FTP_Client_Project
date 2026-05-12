@@ -35,6 +35,7 @@ public class Controller implements AutoCloseable {
         // Add action listeners to control buttons
         controlPanel.connection.addAction(new ConnectionHandler(this));
         controlPanel.refresh.addAction(new RefreshHandler(this));
+        controlPanel.download.addAction(new DownloadHandler(this));
         // Add action listeners for server file panel
         serverFilePanel.addCDButtonAction(ChangeDirectoryHandler.toParent(this));
         ChangeDirectoryHandler.setCdToChild(this);
@@ -45,11 +46,6 @@ public class Controller implements AutoCloseable {
 
 
     // ----------------------------- Control Button Actions --------------------------------
-
-        // 2. REFRESH BUTTON
-    public void refresh() {
-        // Reload file panels to reflect the current state of the server and local file system.
-    }
 
         // 3. CREATE FOLDER BUTTON
     public void createFolder() {
@@ -62,19 +58,10 @@ public class Controller implements AutoCloseable {
     public void delete() {
         // If no item is selected, do nothing.
         // Determine whether the selected item is a file or a folder.
-        //      If it's a file, send a command to the server to delete the file.
-        //      If it's a folder, pop up dialog to notify cannot delete folders.
+        //      If it's a file, send DELE command to the server to delete the file.
+        //      If it's a folder, send RMD command to the server to delete the folder.
         // Receive the response from the server and log the result in the log console:
         //      If successfully, refresh and log the successful deletion.
-        //      If there is an error (e.g., file not found, permission denied), log the error.
-    }
-        // 5. DOWNLOAD BUTTON
-    public void download() {
-        // If no item is selected, do nothing.
-        // Choose a file from server file panel to download, declined if is a folder.
-        // Send a command to the server to download the selected file to current directory.
-        // Receive the response from the server and log the result in the log console:
-        //      If successfully, refresh user file panel and log the successful download.
         //      If there is an error (e.g., file not found, permission denied), log the error.
     }
         // 6. UPLOAD 
@@ -85,23 +72,6 @@ public class Controller implements AutoCloseable {
         // Receive the response from the server and log the result in the log console:
         //      If successfully, refresh server file panel and log the successful upload.
         //      If there is an error (e.g., file not found, permission denied), log the error.
-    }
-        
-        // 7. USER FILE PANEL BUTTON
-    public void changeDirectory() {
-        // Pop up dialog to get the path of the new directory
-        // If user close the dialog without selecting a directory, do nothing.
-        // Change the current directory of the user file panel to the specified path.
-        // Refresh
-    }
-
-        // 8. SERVER FILE PANEL BUTTON
-    public void changeServerDirectory() {
-        // If user select a folder, send a command to the server to change the current directory to the selected folder.
-        // Else, send command to change to parent directory.
-        // Receive the response from the server and log the result in the log console:
-        //      If successfully, refresh and log the successful directory change.
-        //      If there is an error (e.g., directory not found, permission denied), log the error.
     }
 
 
@@ -140,25 +110,6 @@ public class Controller implements AutoCloseable {
         } catch (Exception e) {
             closeConnection(true, "Error receiving message: " + e.getMessage());
             return null;
-        }
-    }
-
-    /**
-     * Receive messages from the data connection and log the responses in the log console.
-     * @param dataConnection The data connection to receive messages from.
-     * @return A list of messages received from the data connection, or null if an error occurs.
-     */
-    public void receiveFromDataConnection(Connection dataConnection, AtomicBoolean isDone, List<String> storage) {
-        try {
-            String message;
-            while (!isDone.get() && (message = dataConnection.in()) != null) {
-                synchronized (storage) {
-                    storage.add(message);
-                }
-                logConsole.log("[DATA CONNECTION] " + message, LogConsole.TYPE_RESPONSE);
-            } 
-        } catch (Exception ignored) {
-             // Ignore exceptions caused by closing the data connection before the transfer is complete, as it is expected behavior.
         }
     }
 

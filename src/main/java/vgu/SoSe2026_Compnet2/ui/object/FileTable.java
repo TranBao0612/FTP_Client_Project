@@ -9,12 +9,19 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.beans.property.SimpleStringProperty;
 import java.util.List;
 
+/**
+ * A table to display file metadata, including name, type, size (B), and last modified time.
+ */
 public class FileTable extends TableView<FileMetadata> implements UIComponent {
     private TableColumn<FileMetadata, String> nameCol = new TableColumn<>("Name");
     private TableColumn<FileMetadata, String> typeCol = new TableColumn<>("Type");
     private TableColumn<FileMetadata, Long> sizeCol = new TableColumn<>("Size");
     private TableColumn<FileMetadata, String> lastModifiedCol = new TableColumn<>("Last Modified");
 
+    /**
+     * Initializes the FileTable with columns for name, type, size, and last modified time. <br>
+     * The table only support displaying files and directories. Insert other types of data may cause unexpected behavior.
+     */
     public FileTable() {
         // Set columns
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));

@@ -43,7 +43,6 @@ public final class ChangeDirectoryHandler {
         return () -> {
             controller.inExecutingStateUI();
             new Thread(() -> {
-                System.out.println("Attempting to change directory to child: " + child);
                 boolean success = Command.cwd(controller, child);
                 if (success) {
                     updateUIOnSuccess(controller);

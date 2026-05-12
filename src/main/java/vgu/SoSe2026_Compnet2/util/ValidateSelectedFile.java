@@ -23,7 +23,6 @@ public class ValidateSelectedFile {
             return null;
         }
         return metadata;
-
     }
 
     /**

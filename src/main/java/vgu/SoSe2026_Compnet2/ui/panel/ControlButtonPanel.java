@@ -5,6 +5,9 @@ import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 import javafx.application.Platform;
 
+/**
+ * VBox containing the control buttons for the FTP client application.
+ */
 public class ControlButtonPanel extends VBox {
     public ControlButton connection;
     public ControlButton refresh;
@@ -13,6 +16,10 @@ public class ControlButtonPanel extends VBox {
     public ControlButton download;
     public ControlButton upload;
 
+    /**
+     * VBox containing the control buttons for the FTP client application, 
+     *      including Connect, Refresh, Create Folder, Delete, Download, and Upload.
+     */
     public ControlButtonPanel() {
         super(5);
 

@@ -107,6 +107,9 @@ public class FileMetadata {
         return String.format("Type: %s, Size: %d, Modified: %s, Name: %s", type, sizeInByte, lastModified, name);
     }
 
+
+
+
     public FileType getType() {
         return type;
     }
@@ -120,6 +123,9 @@ public class FileMetadata {
         return lastModified;
     }
 
+
+
+    
     /**
      * Represents the type of a Unix file, such as a regular file, directory.
      * Other types (like symbolic links, devices, etc.) will be marked as UNKNOWN and not be displayed on the file list.

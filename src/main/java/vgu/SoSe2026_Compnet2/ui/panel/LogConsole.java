@@ -9,6 +9,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.application.Platform;
 
+/**
+ * Custom log pane that displays log messages with timestamps and color coding based on message type.
+ */
 public class LogConsole extends ScrollPane implements UIComponent {
     public static final Color TYPE_COMMAND = Color.GREEN;
     public static final Color TYPE_RESPONSE = Color.BLACK;

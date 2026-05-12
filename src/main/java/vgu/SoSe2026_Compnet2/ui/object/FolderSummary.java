@@ -20,7 +20,9 @@ public class FolderSummary extends Label implements UIComponent {
         super(String.format("%d Folders %d Files %d K", numberOfFolders, numberOfFiles, totalSizeInBytes / 1024));
         setStyle();
     }
-
+    /**
+     * Create a label with default summary information showing 0 folders, 0 files, and 0 KB.
+     */
     public FolderSummary() {
         this(0, 0, 0);
     }

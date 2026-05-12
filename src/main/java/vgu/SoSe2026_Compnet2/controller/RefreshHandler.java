@@ -63,7 +63,7 @@ public class RefreshHandler implements Runnable {
      */
     private void updateUIOnSuccess(String currentDirectory, List<FileMetadata> fileList) {
         controller.serverFilePanel.reload(currentDirectory, fileList);
-        controller.logConsole.log("Refresh successful.", LogConsole.TYPE_INFO);
+        controller.logConsole.log("Refresh successfully.", LogConsole.TYPE_INFO);
     } 
     /**
      * If refresh fails, only log the error message

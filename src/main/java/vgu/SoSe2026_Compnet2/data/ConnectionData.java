@@ -24,7 +24,6 @@ public class ConnectionData {
         this.isAnonymous = isAnonymous;
     }
 
-    // Getters
     public String getServerURL() {
         return serverURL;
     }

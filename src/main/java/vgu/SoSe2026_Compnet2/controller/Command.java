@@ -4,10 +4,14 @@ import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import vgu.SoSe2026_Compnet2.util.Connection;
 import vgu.SoSe2026_Compnet2.util.ValidateFTPResponse;
 import vgu.SoSe2026_Compnet2.constants.ConnectionConstant;
+import vgu.SoSe2026_Compnet2.constants.Directory;
+import vgu.SoSe2026_Compnet2.ui.panel.LogConsole;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.ArrayList;
+import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.FileOutputStream;
 
 /**
  * Command class to handle the FTP commands sent to the server and produce results.
@@ -31,36 +35,6 @@ public final class Command {
         }
         return null;
     } 
-
-    /**
-     * Send LIST command to the server to retrieve the list of files in the current directory.
-     * @param controller instances stores all UI components
-     * @param dataConnection The data connection to receive the file list from.
-     * @return A list of FileMetadata objects representing the files in the current directory, or null if an error occurs.
-     */
-    public static List<FileMetadata> list(Controller controller, Connection dataConnection) {
-        controller.sendToServer("LIST");
-        // Server confirms that it is ready to transfer by "150" response
-        if (!ValidateFTPResponse.startWith(controller.receiveFromServer(), "150"))
-            return null;
-        // Use a separate thread to receive data, since data connection may be closed 
-        // after controller receives the final response from the server, which will block the program.
-        List<String> data = new ArrayList<>();
-        AtomicBoolean isDone = new AtomicBoolean(false);
-        Thread dataThread = new Thread(() -> {
-            controller.receiveFromDataConnection(dataConnection, isDone, data);
-        });
-        dataThread.start();
-        // Stop data thread after receiving the final response from the server
-        String finalResponse = controller.receiveFromServer();
-        isDone.set(true);
-        // Process the data received if the server confirms that the transfer is successful
-        if (ValidateFTPResponse.startWith(finalResponse, "226")) {
-            return FileMetadata.derivedFromUnixDescription(data);
-        }
-        // If the server responds with an error code, return null
-        return null;
-    }
 
     /**
      * Send PASV command to the server to enter passive mode and establish a data connection, with retry logic.
@@ -124,6 +98,98 @@ public final class Command {
             return false;
     }
 
+
+    /**
+     * Send LIST command to the server to retrieve the list of files in the current directory.
+     * @param controller instances stores all UI components
+     * @param dataConnection The data connection to receive the file list from.
+     * @return A list of FileMetadata objects representing the files in the current directory, or null if an error occurs.
+     */
+    public static List<FileMetadata> list(Controller controller, Connection dataConnection) {
+        controller.sendToServer("LIST");
+        // Server confirms that it is ready to transfer by "150" response
+        if (!ValidateFTPResponse.startWith(controller.receiveFromServer(), "150"))
+            return null;
+        // Receive file list from data connection
+        List<String> data = new ArrayList<>();
+        String message;
+        while (true) {
+            try {
+                message = dataConnection.in();
+                if (message == null)
+                    break;
+                data.add(message);
+            } catch (Exception e) {
+                break;
+            }
+        }
+        // Process the data received if the server confirms the transfer is successful
+        String finalResponse = controller.receiveFromServer();
+        if (ValidateFTPResponse.startWith(finalResponse, "226")) {
+            return FileMetadata.derivedFromUnixDescription(data);
+        }
+        // If the server responds with an error code, return null
+        return null;
+    }
+
+    /**
+     * Send RETR command to the server to retrieve a file from the current directory of server.
+     * @param controller instances stores all UI components
+     * @param dataConnection The data connection to receive the file data from.
+     * @param downloadFilename The name of the file to retrieve.
+     * @return true if the file retrieval is successful, false otherwise.
+     */
+    public static boolean retr(Controller controller, Connection dataConnection, String downloadFilename, String savePath) {
+        controller.sendToServer("RETR " + downloadFilename);
+        // Server confirms that it is ready to transfer by "150" response
+        if (!ValidateFTPResponse.startWith(controller.receiveFromServer(), "150"))
+            return false;
+        // Receive file data through data connection
+        try {
+            InputStream dataInputStream = dataConnection.getInStream();
+            FileOutputStream fileOutputStream = new FileOutputStream(savePath);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = dataInputStream.read(buffer)) != -1) {
+                fileOutputStream.write(buffer, 0, bytesRead);
+            }
+            fileOutputStream.close();
+        } catch (Exception e) {
+            return false;
+        }
+        // Wait for the server to confirm the transfer is successful
+        String finalResponse = controller.receiveFromServer();
+        if (ValidateFTPResponse.startWith(finalResponse, "226")) {
+            return true;
+        }
+        // If the server responds with an error code, return false
+        return false;
+    }
+
+
+    /**
+     * Send STOR command to the server to store a file in the current directory of user.
+     * @param controller instances stores all UI components
+     * @param dataConnection The data connection to send the file data through.
+     * @param filename The name of the file to store.
+     * @return true if the file storage is successful, false otherwise.
+     */
+    public static boolean stor(Controller controller, Connection dataConnection, String filename) {
+        controller.sendToServer("STOR " + filename);
+        // Server confirms that it is ready to transfer by "150" response
+        if (!ValidateFTPResponse.startWith(controller.receiveFromServer(), "150"))
+            return false;
+        // Send file data through data connection
+        // ... (implementation for sending file data)
+        return true;
+    }
+
+
+    /**
+     * Send QUIT command to the server to terminate the FTP session.
+     * @param controller instances stores all UI components
+     * @return true if the server confirms the termination with a "221" response, false otherwise.
+     */
     public static boolean quit(Controller controller) {
         controller.sendToServer("QUIT");
         String response = controller.receiveFromServer();
