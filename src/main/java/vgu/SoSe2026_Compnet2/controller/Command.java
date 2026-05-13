@@ -4,7 +4,6 @@ import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import vgu.SoSe2026_Compnet2.util.Connection;
 import vgu.SoSe2026_Compnet2.util.ValidateFTPResponse;
 import vgu.SoSe2026_Compnet2.constants.ConnectionConstant;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.io.OutputStream;

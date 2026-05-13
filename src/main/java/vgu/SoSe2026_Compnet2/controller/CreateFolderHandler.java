@@ -28,7 +28,7 @@ public class CreateFolderHandler implements Runnable {
         // Get folder name from user input
         String folderName = RequestFolderName.request();
         if (folderName == null || folderName.isBlank()) {
-            if (folderName.isBlank()) {
+            if (folderName != null && folderName.isBlank()) {
                 ErrorAlert.show("Invalid Folder Name", "Folder name cannot be empty. Please enter a valid folder name.");
             }
             controller.readyStateUI();

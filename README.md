@@ -3,6 +3,9 @@
 This project is a **Simple FTP Client Program** developed in Java using JavaFX.  
 The application allows users to connect to an FTP server and perform common remote file management operations through a user-friendly graphical interface.
 
+## Integrity Declaration
+I confirm that this submission is my own work. I did not copy code from AI tools, classmates, or online repositories.
+
 ## Project Overview
 
 The project is designed to demonstrate:
@@ -77,11 +80,19 @@ FTP_Client_Project
 ### Programming Language and Frameworks
 - Java 17
 - JavaFX for GUI development
+- CSS for styling and enhancing GUI
 
 ### Tools and IDE
 - Maven project build tool
 - Git + Github for version control
 - Visual Studio Code
+
+### Additional Libraries in used to the Restriction
+| Library | Used in Class | Purpose |
+|:--------|:--------------|:--------|
+| `java.time.LocalDateTime` | `vgu.SoSe2026_Compnet2.util.DateFormatter` | Add real-time timestamp for logging purpose |
+| `java.time.format.DateTimeFormatter` | `vgu.SoSe2026_Compnet2.util.DateFormatter` | Format time for logging purpose |
+| `java.nio.file.Path` | `vgu.SoSe2026_Compnet2.constants.Directory` | Generate path usable path on all OS and platform |
 
 ## Error Handling
 
@@ -97,7 +108,6 @@ The application includes:
 
 Possible enhancements include:
 - Multiple concurrent server commands handling
-- Drag-and-drop file upload
 - Transfer progress bars
 - Upload/Download folders and multiple files at once
 
@@ -117,16 +127,16 @@ mvn javafx:run
 ```
 
 ## FTP Commands used for each Feature
-- Connect: `USER` + `PASS`
-- Disconnect: `QUIT`
-- Refresh UI: `PWD` + `PASV` + `LIST`
-- Create Remote Folder: `MKD`
-- Delete Remote Folder: `RMD`
-- Delete Remote File: `DELE`
-- Download: `TYPE I` + `PASV` + `RETR`
-- Upload: `TYPE I` + `PASV` + `STOR`
-- Change Remote Directory to Parent Dir: `CDUP`
-- Change Remote Directory to Sub-folder: `CD` 
+| Feature | FTP Command |
+|:--------|:------------|
+| Login _(after successfully connected to server)_ | `USER` + `PASS` |
+| Disconnect | `QUIT` |
+| UI Rendering | `PWD` + `PASV` + `LIST` |
+| Change Directory | `CDUP` to change to Parent Dir and `CD` to change to sub-folders | 
+| Create Remote Folder | `MKD` |
+| Delete | `RMD` for Folder and `DELE` for File |
+| Download | `TYPE I` + `PASV` + `RETR` |
+| Upload | `TYPE I` + `PASV` + `STOR` |
 
 ## UI: User Guide
 ![Program Launch](src\main\resources\images\UI_launch.png)

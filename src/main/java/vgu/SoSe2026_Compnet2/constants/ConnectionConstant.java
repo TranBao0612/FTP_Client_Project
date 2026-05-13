@@ -10,6 +10,6 @@ public final class ConnectionConstant {
 
     public static final int DATA_TRANSFER_CHUNK_SIZE = 4096;
 
-    public static final int PASSIVE_MODE_RETRY_LIMIT = 4;
+    public static final int PASSIVE_MODE_RETRY_LIMIT = 5;
     public static final int BINARY_MODE_RETRY_LIMIT = 2;
 }

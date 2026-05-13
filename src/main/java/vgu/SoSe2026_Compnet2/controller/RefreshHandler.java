@@ -71,8 +71,8 @@ public class RefreshHandler implements Runnable {
      * @param errorMessage
      */
     private void updateUIOnFailure(String errorMessage) {
-        controller.logConsole.log(errorMessage, LogConsole.TYPE_ERROR);
         ErrorAlert.show("Refresh failed.", errorMessage);
+        controller.logConsole.log(errorMessage, LogConsole.TYPE_ERROR);
         controller.logConsole.log("Refresh failed.", LogConsole.TYPE_ERROR);
     }
     

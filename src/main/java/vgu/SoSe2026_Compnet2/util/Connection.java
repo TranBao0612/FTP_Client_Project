@@ -86,7 +86,7 @@ public class Connection implements AutoCloseable {
      * @param response the passive mode response from the FTP server (format: "227 Entering Passive Mode (192,168,1,2,7,138)")
      * @return an array containing 6 elements: the first 4 are the host octets, and the last 2 are the port numbers
      */
-    public static String[] extractConnectionInfoFromFTPPassiveModeResponse(String response) {
+    private static String[] extractConnectionInfoFromFTPPassiveModeResponse(String response) {
         // Example response: "227 Entering Passive Mode (192,168,1,2,7,138)"
         int start = response.indexOf('(');
         int end = response.indexOf(')');
@@ -125,36 +125,20 @@ public class Connection implements AutoCloseable {
     }
 
     /**
-     * Sends a message to the server through this connection.
-     * @param message the message to send
-     */
-    public void out(String message) {
-        out.println(message);
-    }
-
-    /**
-     * Turns off the socket timeout, allowing the connection to wait indefinitely for a response from the server.
-     * @throws IOException if an I/O error occurs when setting the socket timeout
-     */
-    public void turnOffTimeout() throws IOException {
-        socket.setSoTimeout(0); // 0 means infinite timeout
-    }
-
-    /**
-     * Turns on the socket timeout, setting it to a predefined value (e.g., 5000 milliseconds) to prevent indefinite blocking when waiting for a response from the server.
-     * @throws IOException if an I/O error occurs when setting the socket timeout
-     */
-    public void turnOnTimeout() throws IOException {
-        socket.setSoTimeout(ConnectionConstant.TIMEOUT_MILLISEC);
-    }
-
-    /**
      * Receives a message from the server through this connection.
      * @return the message received
      * @throws IOException if an I/O error occurs when reading from the input stream
      */
     public String in() throws IOException {
         return in.readLine();
+    }
+
+    /**
+     * Sends a message to the server through this connection.
+     * @param message the message to send
+     */
+    public void out(String message) {
+        out.println(message);
     }
 
     /**
