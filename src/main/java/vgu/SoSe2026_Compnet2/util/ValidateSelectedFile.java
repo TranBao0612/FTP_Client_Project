@@ -2,7 +2,6 @@ package vgu.SoSe2026_Compnet2.util;
 
 import vgu.SoSe2026_Compnet2.ui.panel.FilePanel;
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
-import javafx.scene.control.Alert;
 
 /**
  * Utility class for validating the selected file in a FilePanel with alert dialogs when validation fails.
@@ -16,10 +15,10 @@ public final class ValidateSelectedFile {
     public static FileMetadata isFile(FilePanel filePanel) {
         FileMetadata metadata = filePanel.getSelectedFile();
         if (metadata == null) {
-            createAlert("No file selected. Please select a file.");
+            ErrorAlert.show("No file selected", "Please select a file.");
             return null;
         } else if (metadata.getType() == FileMetadata.FileType.DIRECTORY) {
-            createAlert("Selected item is a folder. Please select a file.");
+            ErrorAlert.show("Invalid selection", "Selected item is a folder. Please select a file.");
             return null;
         }
         return metadata;
@@ -33,22 +32,9 @@ public final class ValidateSelectedFile {
     public static FileMetadata hasSelection(FilePanel filePanel) {
         FileMetadata metadata = filePanel.getSelectedFile();
         if (metadata == null) {
-            createAlert("No item selected. Please select an item.");
+            ErrorAlert.show("No item selected", "Please select an item.");
             return null;
         }
         return metadata;
-    }
-
-    /**
-     * Create and show an alert with the given message.
-     * @param message the message to display in the alert
-     * @return the created alert
-     */
-    private static Alert createAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("File Selection Error");
-        alert.setContentText(message);
-        alert.showAndWait();
-        return alert;
     }
 }

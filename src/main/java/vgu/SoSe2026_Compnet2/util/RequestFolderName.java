@@ -21,7 +21,7 @@ public final class RequestFolderName extends TextInputDialog {
      */
     private RequestFolderName() {
         setTitle("FTP Service - Create Remote Folder");
-        setHeaderText("Enter the name of the new folder: ");
-        setContentText("Folder Name: ");
+        setHeaderText(null);
+        setContentText("Enter the name of the new folder: ");
     }
 }

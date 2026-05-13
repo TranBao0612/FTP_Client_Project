@@ -3,6 +3,7 @@ package vgu.SoSe2026_Compnet2.controller;
 import vgu.SoSe2026_Compnet2.ui.panel.*;
 import vgu.SoSe2026_Compnet2.util.Connection;
 import vgu.SoSe2026_Compnet2.ui.object.ConnectionInfoLabel;
+import vgu.SoSe2026_Compnet2.util.ErrorAlert;
 
 /**
  * Controller class to handle the logic of the application. 
@@ -65,6 +66,7 @@ public class Controller implements AutoCloseable {
             connection.out(message);
             logConsole.log("[CLIENT] " + message, LogConsole.TYPE_COMMAND);
         } else {
+            ErrorAlert.show("Connection Error", "Error: Connection closed. Please reconnect.");
             closeConnection(true, "Cannot send message.");
         }
     }
@@ -84,6 +86,7 @@ public class Controller implements AutoCloseable {
             } while (!message.matches("^\\d{3} .*"));
             return message; 
         } catch (Exception e) {
+            ErrorAlert.show("Connection Error", "Error: Connection closed. Please reconnect.");
             closeConnection(true, "Error receiving message: " + e.getMessage());
             return null;
         }
@@ -105,10 +108,11 @@ public class Controller implements AutoCloseable {
             disconnectedStateUI();
             // Log messages
             logConsole.log(message, isError ? LogConsole.TYPE_ERROR : LogConsole.TYPE_INFO);
-            if (isError) 
+            if (isError) {
                 logConsole.log("Error: Connection closed. Please reconnect.", LogConsole.TYPE_ERROR);
-            else
+            } else {
                 logConsole.log("Connection closed successfully.", LogConsole.TYPE_INFO);
+            }
         } else {
             // If in this case, connection has never been established sucessfully, 
             // just log the error message without updating UI to avoid confusion.

@@ -2,6 +2,7 @@ package vgu.SoSe2026_Compnet2.controller;
 
 import vgu.SoSe2026_Compnet2.ui.panel.LogConsole;
 import vgu.SoSe2026_Compnet2.util.Connection;
+import vgu.SoSe2026_Compnet2.util.ErrorAlert;
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import java.util.List;
 
@@ -71,6 +72,7 @@ public class RefreshHandler implements Runnable {
      */
     private void updateUIOnFailure(String errorMessage) {
         controller.logConsole.log(errorMessage, LogConsole.TYPE_ERROR);
+        ErrorAlert.show("Refresh failed.", errorMessage);
         controller.logConsole.log("Refresh failed.", LogConsole.TYPE_ERROR);
     }
     

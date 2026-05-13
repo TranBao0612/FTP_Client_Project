@@ -58,11 +58,14 @@ public class ConnectionHandler implements Runnable {
                     }
                 } else {
                     // Connection is closed by the server, log the error message and close the connection.
+                    ErrorAlert.show("Connection Error", "Error: Connection rejected by server. Please try again.");
                     controller.closeConnection(true, "Connection closed by server.");
                 }
             } catch (UnknownHostException e) {
+                ErrorAlert.show("Connection Error", "Error: Unknown host. Please check the server URL and try again.");
                 controller.closeConnection(true, "Unknown host: " + e.getMessage());
             } catch (IOException e) {
+                ErrorAlert.show("Connection Error", "Error: Failed to connect to server. Please check your network connection and try again.");
                 controller.closeConnection(true, "Failed to connect to server: " + e.getMessage());
             }
         }).start();
@@ -119,7 +122,9 @@ public class ConnectionHandler implements Runnable {
                 break;
         }
         if (!success) {
-            controller.closeConnection(true, "All anonymous login attempts failed." +
+            ErrorAlert.show("Login Error", "Anonymous login failed. " +
+                    "This server probably does not allow anonymous login, or has specific requirements for anonymous login that are not met by the default or alternative usernames.");
+            controller.closeConnection(true, "All anonymous login attempts failed. " +
                     "This server probably does not allow anonymous login, or has specific requirements for anonymous login that are not met by the default or alternative usernames."
             );
         }
@@ -142,20 +147,24 @@ public class ConnectionHandler implements Runnable {
             return true;
         // But if the server requires password and username is rejected, close connection and log error message.
         if (ValidateFTPResponse.startWith(response, "530") || !ValidateFTPResponse.startWith(response, "331")) {
-            if (autoCloseOnFailure)
+            if (autoCloseOnFailure) {
+                ErrorAlert.show("Login Error", "Login failed: Username \"" + data.getUsername() + "\" rejected.");
                 controller.closeConnection(true, "Login failed: Username rejected - " + data.getUsername());
-            else
+            } else {
                 controller.logConsole.log("Login failed: Username rejected - " + data.getUsername(), LogConsole.TYPE_ERROR);
+            }
             return false;
         }
         // Send password
         controller.sendToServer("PASS " + data.getPassword());
         response = controller.receiveFromServer();
         if (!ValidateFTPResponse.startWith(response, "230")) {
-            if (autoCloseOnFailure)
+            if (autoCloseOnFailure) {
+                ErrorAlert.show("Login Error", "Login failed: Password rejected.");
                 controller.closeConnection(true, "Login failed: Password rejected.");
-            else
+            } else {
                 controller.logConsole.log("Login failed: Password rejected.", LogConsole.TYPE_ERROR);
+            }
             return false;
         }
         // Login successful

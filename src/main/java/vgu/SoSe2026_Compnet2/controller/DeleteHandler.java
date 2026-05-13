@@ -3,6 +3,7 @@ package vgu.SoSe2026_Compnet2.controller;
 import vgu.SoSe2026_Compnet2.util.ValidateSelectedFile;
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import vgu.SoSe2026_Compnet2.ui.panel.LogConsole;
+import vgu.SoSe2026_Compnet2.util.ErrorAlert;
 
 /**
  * Handles the delete operation for files and folders in the server file panel.
@@ -36,12 +37,16 @@ public class DeleteHandler implements Runnable{
         FileMetadata.FileType type = selectedFile.getType();
         String name = selectedFile.getName();
         new Thread(() -> {
+            boolean success;
             if (type == FileMetadata.FileType.FILE)
-                updateUI(Command.dele(controller, name), true);
+                success = Command.dele(controller, name);
             else
-                updateUI(Command.rmd(controller, name), false);
-            // Refresh after the delete operation is completed
-            new RefreshHandler(controller).run();
+                success = Command.rmd(controller, name);
+            // Update UI and Refresh based on success of the delete operation
+            updateUI(success, type == FileMetadata.FileType.FILE);
+            if (success) {
+                new RefreshHandler(controller).run();
+            }
         }).start();
     }
 
@@ -52,10 +57,14 @@ public class DeleteHandler implements Runnable{
      */
     private void updateUI(boolean isSuccess, boolean isFile) {
         String itemType = isFile ? "file" : "folder";
-        if (isSuccess) 
+        if (isSuccess) {
             controller.logConsole.log("Deleted " + itemType + " successfully.", LogConsole.TYPE_INFO);
-        else
+        } else {
+            ErrorAlert.show("Delete " + itemType + " Error", 
+                    "Failed to delete " + itemType + 
+                    ". Please check if the item still exists and you have permission to delete it.");
             controller.logConsole.log("Failed to delete " + itemType + ".", LogConsole.TYPE_ERROR);
+        }
         controller.readyStateUI();
     }
 }

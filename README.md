@@ -106,13 +106,13 @@ Possible enhancements include:
 1. Open a terminal
 2. Navigate to the project root folder, the contains the `pom.xml` file:
 
-```
+```bash
 cd <your_directory>/FTP_Client_Project
 ```
 
 3. Run the following command:
 
-```
+```bash
 mvn javafx:run
 ```
 

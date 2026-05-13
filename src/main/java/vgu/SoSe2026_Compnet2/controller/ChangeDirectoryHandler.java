@@ -2,6 +2,7 @@ package vgu.SoSe2026_Compnet2.controller;
 
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import vgu.SoSe2026_Compnet2.ui.panel.LogConsole;
+import vgu.SoSe2026_Compnet2.util.ErrorAlert;
 import javafx.scene.input.MouseButton;
 import javafx.scene.control.TableRow;
 
@@ -88,6 +89,7 @@ public final class ChangeDirectoryHandler {
      */
     private static void updateUIOnFailure(Controller controller) {
         controller.readyStateUI();
+        ErrorAlert.show("Change Directory Error", "Failed to change directory. Please check if the directory still exists and you have permission to access it.");  
         controller.logConsole.log("Failed to change directory.", LogConsole.TYPE_ERROR);
     }
 

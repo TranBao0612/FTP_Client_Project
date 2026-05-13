@@ -4,6 +4,7 @@ import vgu.SoSe2026_Compnet2.constants.LoginData;
 import vgu.SoSe2026_Compnet2.data.ConnectionData;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 
 /**
  * Utility class for displaying a dialog to request 
@@ -32,7 +33,7 @@ public final class RequestConnectionInfo extends Dialog<ConnectionData> {
      *      the username and password fields will be immutable. <br>
      */
     private RequestConnectionInfo() {
-        getDialogPane().setContent(new VBox(10, isAnonymousLogin, serverURLField, usernameField, passwordField));
+        getDialogPane().setContent(new VBox(10, isAnonymousLogin, alignTextFields(10, 10)));
         // Set up the dialog layout
         setTitle("FTP Service - Connection Initialization");
         serverURLField.setPromptText(LoginData.DLPTEST_HOST);
@@ -87,5 +88,24 @@ public final class RequestConnectionInfo extends Dialog<ConnectionData> {
                 passwordField.setPromptText(LoginData.DLPTEST_PASSWORD);
             }
         });
+    }
+
+    /**
+     * Creates a GridPane layout to align the server URL, username, and password fields with their respective labels.
+     * @param hgap The horizontal gap between columns in the GridPane.
+     * @param vgap The vertical gap between rows in the GridPane.
+     * @return A GridPane containing the aligned labels and text fields for server URL, username, and password.
+     */
+    private GridPane alignTextFields(int hgap, int vgap) {
+        GridPane grid = new GridPane();
+        grid.setHgap(hgap);
+        grid.setVgap(vgap);
+        grid.add(new Label("Server URL: "), 0, 0);
+        grid.add(serverURLField, 1, 0);
+        grid.add(new Label("Username: "), 0, 1);
+        grid.add(usernameField, 1, 1);
+        grid.add(new Label("Password: "), 0, 2);
+        grid.add(passwordField, 1, 2);
+        return grid;
     }
 }

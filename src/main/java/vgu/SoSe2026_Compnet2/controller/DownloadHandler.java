@@ -3,6 +3,7 @@ package vgu.SoSe2026_Compnet2.controller;
 import vgu.SoSe2026_Compnet2.constants.Directory;
 import vgu.SoSe2026_Compnet2.util.Connection;
 import vgu.SoSe2026_Compnet2.util.ValidateSelectedFile;
+import vgu.SoSe2026_Compnet2.util.ErrorAlert;
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import vgu.SoSe2026_Compnet2.ui.panel.LogConsole;
 import java.io.File;
@@ -70,6 +71,7 @@ public class DownloadHandler implements Runnable {
      */
     private void updateUIOnFailed(String errorMessage) {
         controller.readyStateUI();
+        ErrorAlert.show("Download Error", errorMessage + "\nPlease check log in the console for more details.");
         controller.logConsole.log(errorMessage, LogConsole.TYPE_ERROR);
     }
 
