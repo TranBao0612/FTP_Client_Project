@@ -83,7 +83,7 @@ public class Controller implements AutoCloseable {
             do {
                 message = connection.in();
                 logConsole.log("[SERVER] " + message, LogConsole.TYPE_RESPONSE);
-            } while (!message.matches("^\\d{3} .*"));
+            } while (message.matches("^\\d{3}-.*"));
             return message; 
         } catch (Exception e) {
             ErrorAlert.show("Connection Error", "Error: Connection closed. Please reconnect.");

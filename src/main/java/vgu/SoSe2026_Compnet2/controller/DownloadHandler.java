@@ -44,7 +44,7 @@ public class DownloadHandler implements Runnable {
                 return;
             }
             Connection dataConnection = Command.pasv(controller);
-            String userFile = Directory.generateFilePath(controller.userFilePanel.getCurrentDirectory(), serverFile);
+            String userFile = Directory.generateFilePath(controller.userFilePanel.getCurrentDirectory(), serverFile, true);
             if (dataConnection == null) {
                 updateUIOnFailed("Failed to establish data connection for file transfer.");
                 return;

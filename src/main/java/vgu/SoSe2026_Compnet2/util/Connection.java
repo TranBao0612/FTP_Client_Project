@@ -29,7 +29,7 @@ public class Connection implements AutoCloseable {
      *      resources cleaned up automatically if construction fails.
      * @param host the hostname or IP address of the server
      * @param port the port number to connect to (example: 21 for FTP control connection, 20 for FTP data connection)
-     * @param initializeTimeout the socket initialization timeout (ms); no timeout will be set if value <= 0
+     * @param initializeTimeout the socket initialization timeout (ms); no initialization timeout will be set if value <= 0
     * @throws IOException if an I/O error occurs when creating the socket or getting the input/output streams
      */
     public Connection(String host, int port, int initializeTimeout) throws IOException {
@@ -44,6 +44,7 @@ public class Connection implements AutoCloseable {
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.outStream = socket.getOutputStream();
         this.inStream = socket.getInputStream();
+        this.socket.setSoTimeout(ConnectionConstant.TIMEOUT_MILLISEC);
     }
     /**
      * Initialize a connection to the specified host and port with no socket initialization timeout.
