@@ -108,7 +108,7 @@ public class Controller implements AutoCloseable {
             // Log messages
             logConsole.log(message, isError ? LogConsole.TYPE_ERROR : LogConsole.TYPE_INFO);
             if (isError) {
-                logConsole.log("Error: Connection closed. Please reconnect.", LogConsole.TYPE_ERROR);
+                logConsole.log("Error: Control connection closed. Please reconnect.", LogConsole.TYPE_ERROR);
             } else {
                 logConsole.log("Connection closed successfully.", LogConsole.TYPE_INFO);
             }
