@@ -108,6 +108,7 @@ public final class Command {
         // Server confirms that it is ready to transfer by "150" response
         if (!ValidateFTPResponse.startWith(controller.receiveFromServer(), "150"))
             return null;
+        System.out.println("Server is ready to transfer file list.");
         // Receive file list from data connection
         List<String> data = new ArrayList<>();
         String message;
@@ -119,6 +120,8 @@ public final class Command {
                 data.add(message);
             } catch (Exception e) {
                 break;
+            } finally {
+                dataConnection.close();
             }
         }
         // Process the data received if the server confirms the transfer is successful

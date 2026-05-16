@@ -83,7 +83,7 @@ public class Controller implements AutoCloseable {
             do {
                 message = connection.in();
                 logConsole.log("[SERVER] " + message, LogConsole.TYPE_RESPONSE);
-            } while (message.matches("^\\d{3}-.*"));
+            } while (!message.matches("^\\d{3} .*"));
             return message; 
         } catch (Exception e) {
             ErrorAlert.show("Connection Error", "Error: Connection closed. Please reconnect.");
@@ -104,8 +104,7 @@ public class Controller implements AutoCloseable {
         if (connectButtonIsConnect()) {
             // Close connection
             connection.close();
-            // Update connection info label
-            disconnectedStateUI();
+            connection = null;
             // Log messages
             logConsole.log(message, isError ? LogConsole.TYPE_ERROR : LogConsole.TYPE_INFO);
             if (isError) {
@@ -118,8 +117,8 @@ public class Controller implements AutoCloseable {
             // just log the error message without updating UI to avoid confusion.
             logConsole.log(message, LogConsole.TYPE_ERROR);
         }
-        // Set connection to null so that isConnected() will return false
-        connection = null;
+        // Update UI to reflect the disconnected state
+        disconnectedStateUI();
     }
 
     /**
@@ -149,8 +148,10 @@ public class Controller implements AutoCloseable {
      *      disabling all actions required communication with the server.
      */
     public void inExecutingStateUI() {
-        controlPanel.disableAll(false);
-        serverFilePanel.disable();
+        if (connectButtonIsConnect()) {
+            controlPanel.disableAll(false);
+            serverFilePanel.disable();
+        }
     }
 
     /**
@@ -158,8 +159,10 @@ public class Controller implements AutoCloseable {
      *      enabling all actions and interactions.
      */
     public void readyStateUI() {
-        controlPanel.enableAll();
-        serverFilePanel.enable();
+        if (connectButtonIsConnect()) {
+            controlPanel.enableAll();
+            serverFilePanel.enable();
+        }
     }
 
 
