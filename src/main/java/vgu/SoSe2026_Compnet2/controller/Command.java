@@ -58,8 +58,23 @@ public final class Command {
      * @return true if the server successfully changes to binary mode, false otherwise
      */
     public static boolean typeI(Controller controller) {
-        for (int i = 0; i < ConnectionConstant.BINARY_MODE_RETRY_LIMIT; i++) {
+        for (int i = 0; i < ConnectionConstant.MODE_RETRY_LIMIT; i++) {
             controller.sendToServer("TYPE I");
+            String response = controller.receiveFromServer();
+            if(ValidateFTPResponse.startWith(response, "200"))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Send TYPE A command to the server to set the transfer mode to ASCII.
+     * @param controller instances stores all UI components
+     * @return true if the server successfully changes to ASCII mode, false otherwise
+     */
+    public static boolean typeA(Controller controller) {
+        for (int i = 0; i < ConnectionConstant.MODE_RETRY_LIMIT; i++) {
+            controller.sendToServer("TYPE A");
             String response = controller.receiveFromServer();
             if(ValidateFTPResponse.startWith(response, "200"))
                 return true;
@@ -106,7 +121,9 @@ public final class Command {
     public static List<FileMetadata> list(Controller controller, Connection dataConnection) {
         controller.sendToServer("LIST");
         // Server confirms that it is ready to transfer by "150" response
-        if (!ValidateFTPResponse.startWith(controller.receiveFromServer(), "150"))
+        String initialResponse = controller.receiveFromServer();
+        if (!ValidateFTPResponse.startWith(initialResponse, "150")
+                && !ValidateFTPResponse.startWith(initialResponse, "125"))
             return null;
         // Receive file list from data connection
         List<String> data = new ArrayList<>();
@@ -121,6 +138,7 @@ public final class Command {
                 break;
             }
         }
+        dataConnection.close();
         // Process the data received if the server confirms the transfer is successful
         String finalResponse = controller.receiveFromServer();
         if (ValidateFTPResponse.startWith(finalResponse, "226")) {
@@ -153,6 +171,7 @@ public final class Command {
                 fileOutputStream.write(buffer, 0, bytesRead);
             }
             fileOutputStream.close();
+            dataConnection.close();
         } catch (Exception e) {
             return false;
         }

@@ -29,6 +29,10 @@ public class RefreshHandler implements Runnable {
         controller.inExecutingStateUI();
         new Thread(() -> {
             try {
+                if (!Command.typeA(controller)) {
+                    updateUIOnFailure("Failed to set ASCII mode.");
+                    return;
+                }
                 String currentDirectory = Command.pwd(controller);
                 if (currentDirectory != null) {
                     // Enter passive mode to prepare for data transfer

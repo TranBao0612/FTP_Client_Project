@@ -148,20 +148,22 @@ public class Controller implements AutoCloseable {
      *      disabling all actions required communication with the server.
      */
     public void inExecutingStateUI() {
-        if (connectButtonIsConnect()) {
-            controlPanel.disableAll(false);
-            serverFilePanel.disable();
-        }
+        controlPanel.disableAll(false);
+        serverFilePanel.disable();
     }
 
     /**
      * Update the UI to reflect the ready state by 
      *      enabling all actions and interactions.
+     * If the connection is closed during the execution of a command, 
+     *      the UI will be updated to reflect the disconnected state.
      */
     public void readyStateUI() {
         if (connectButtonIsConnect()) {
             controlPanel.enableAll();
             serverFilePanel.enable();
+        } else {
+            disconnectedStateUI();
         }
     }
 
