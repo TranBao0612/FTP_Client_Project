@@ -131,7 +131,7 @@ mvn javafx:run
 |:--------|:------------|
 | Login _(after successfully connected to server)_ | `USER` + `PASS` |
 | Disconnect | `QUIT` |
-| UI Rendering | `PWD` + `PASV` + `LIST` |
+| UI Rendering | `PWD` + `TYPE A` + `PASV` + `LIST` |
 | Change Directory | `CDUP` to change to Parent Dir and `CD` to change to sub-folders | 
 | Create Remote Folder | `MKD` |
 | Delete | `RMD` for Folder and `DELE` for File |
@@ -176,6 +176,7 @@ mvn javafx:run
 ![CD in User File Panel](src\main\resources\images\UI_userpanel_changedir.png)
 - After click `Change Directory` button, a directory chooser dialog will pop up to choose folder to navigate.
 - The dialog always start at user home directory.
+- Rows are sorted in descending of last modified time by default (recently modified first). However, in `User File Panel`, the sorting order is type first (folders before names), followed by ascending order of files' name.
 
 ---
 ![Prompt Folder name to Create Remote Directory](src\main\resources\images\UI_prompt_folder_name.png)

@@ -159,7 +159,9 @@ public final class Command {
     public static boolean retr(Controller controller, Connection dataConnection, String serverFilename, String userFilePath) {
         controller.sendToServer("RETR " + serverFilename);
         // Server confirms that it is ready to transfer by "150" response
-        if (!ValidateFTPResponse.startWith(controller.receiveFromServer(), "150"))
+        String initialResponse = controller.receiveFromServer();
+        if (!ValidateFTPResponse.startWith(initialResponse, "150")
+                && !ValidateFTPResponse.startWith(initialResponse, "125"))
             return false;
         // Receive file data through data connection
         try {
@@ -196,7 +198,9 @@ public final class Command {
     public static boolean stor(Controller controller, Connection dataConnection, String serverFilename, String userFilePath) {
         controller.sendToServer("STOR " + serverFilename);
         // Server confirms that it is ready to transfer by "150" response
-        if (!ValidateFTPResponse.startWith(controller.receiveFromServer(), "150"))
+        String initialResponse = controller.receiveFromServer();
+        if (!ValidateFTPResponse.startWith(initialResponse, "150")
+                && !ValidateFTPResponse.startWith(initialResponse, "125"))
             return false;
         // Send file data through data connection
         try {

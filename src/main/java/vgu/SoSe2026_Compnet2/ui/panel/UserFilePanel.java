@@ -4,6 +4,7 @@ import vgu.SoSe2026_Compnet2.constants.Directory;
 import vgu.SoSe2026_Compnet2.data.FileMetadata;
 import vgu.SoSe2026_Compnet2.util.DirectoryPicker;
 import javafx.scene.control.TableRow;
+import javafx.scene.control.TableColumn;
 import javafx.scene.input.MouseButton;
 import java.util.List;
 import java.util.ArrayList;
@@ -25,6 +26,9 @@ public class UserFilePanel extends FilePanel {
         // Add action
         setCDButtonAction();
         setDoubleClickFolderAction();
+        // Add default table sorting behavior: sort by descending order of last modified time
+        fileTable.lastModifiedCol.setSortType(TableColumn.SortType.DESCENDING);
+        fileTable.getSortOrder().add(fileTable.lastModifiedCol);
     }
 
     /**

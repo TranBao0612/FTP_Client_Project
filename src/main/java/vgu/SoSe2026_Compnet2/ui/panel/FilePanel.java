@@ -34,6 +34,8 @@ public abstract class FilePanel extends BorderPane implements UIComponent {
         // Style and size
         setFixedSize();
         setStyle();
+        // Sort files by last modified time by default
+        fileTable.sort();
     }
 
     /**
@@ -138,6 +140,7 @@ public abstract class FilePanel extends BorderPane implements UIComponent {
                 directoryDisplayer.setText(currentDirectory);
                 fileTable.setFiles(files);
                 folderSummary.updateSummary(folderCount[0], fileCount[0], totalSize[0]);
+                fileTable.sort();
             });
         }).start();
     }

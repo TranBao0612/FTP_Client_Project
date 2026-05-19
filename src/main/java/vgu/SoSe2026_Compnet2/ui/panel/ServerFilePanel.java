@@ -1,5 +1,7 @@
 package vgu.SoSe2026_Compnet2.ui.panel;
 
+import javafx.scene.control.TableColumn;
+
 /**
  * Class representing the server file panel in the UI, which extends the abstract FilePanel.
  * The server file panel allows users to navigate the server's file system by 
@@ -13,6 +15,11 @@ public class ServerFilePanel extends FilePanel {
     public ServerFilePanel() {
         super();
         changeDirButton.setText("To Parent Folder");
+        // Add default table sorting behavior: sort by type first (folders before files), then sort by name in ascending order.
+        fileTable.typeCol.setSortType(TableColumn.SortType.DESCENDING);
+        fileTable.nameCol.setSortType(TableColumn.SortType.ASCENDING);
+        fileTable.getSortOrder().add(fileTable.typeCol);
+        fileTable.getSortOrder().add(fileTable.nameCol);
     }
 
     /**
