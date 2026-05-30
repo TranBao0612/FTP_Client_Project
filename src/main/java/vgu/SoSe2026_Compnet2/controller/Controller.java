@@ -62,7 +62,7 @@ public class Controller implements AutoCloseable {
      * @param message The message to be sent to the server.
      */
     public void sendToServer(String message) {
-        if (connection.isConnected()) {
+        if (connectButtonIsConnect() && connection.isConnected()) {
             connection.out(message);
             logConsole.log("[CLIENT] " + message, LogConsole.TYPE_COMMAND);
         } else {
